@@ -30,6 +30,90 @@
       href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
     />
   </head>
+  <style>
+      .folder-contents {
+         padding-left: 20px; /* Indent contents to show nesting */
+         display: none;
+      }
+
+      .file-entry {
+         cursor: pointer;
+         padding: 10px;
+         background-color: #f0f0f0;
+         border-radius: 5px;
+         margin: 5px 0;
+         transition: background-color 0.3s;
+      }
+
+      .file-entry:hover {
+         background-color: #e0e0e0;
+      }
+
+      .folder {
+         background-color: #eef1f7;
+      }
+
+      .folder:hover {
+         background-color: #dde1e7;
+      }
+
+      h3 {
+         color: #333; /* Dark color for header text */
+         margin-bottom: 2%; /* Space between header and file entries */
+      }
+      .file-list-container {
+      height: 100%;
+      overflow-y: auto;
+      border: 1px solid #ffffff;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #fff;
+      box-shadow: 0 2px 6px rgba(133, 80, 80, 0.1);
+    }
+
+         .file-entry:hover {
+            background-color: #ececec; /* Changes background on hover */
+         }
+
+      .file-entry {
+         display: flex;
+         align-items: center;
+         justify-content: flex-start; /* Align items to the left */
+         margin: 10px;
+         padding: 10px;
+         width: auto; /* Adjust width as per content */
+         background-color: #ffffff; /* Clean white background */
+         border: 1px solid #e0e0e0; /* Subtle border */
+         border-radius: 8px; /* Rounded corners for modern look */
+         box-shadow: 2px 2px 6px rgba(0,0,0,0.1); /* Soft shadow for depth */
+         transition: all 0.3s ease; /* Smooth transition for hover effects */
+      }
+
+      
+
+      .file-name {
+         flex-grow: 1; /* Ensures the name takes up available space */
+         margin-left: 10px; /* Space between icon and text */
+      }
+
+      .file-actions i {
+         margin-left: 10px; /* Space between icons */
+         cursor: pointer; /* Indicates clickable */
+         color: #666; /* Default icon color */
+      }
+
+      .file-actions i:hover {
+         color: #312121; /* Darker color on hover for better visibility */
+      }
+
+      .mdi {
+         font-size: 24px; /* Icon size */
+         color: #5f6368; /* Icon color, dark grey */
+         margin-right: 10px; /* Space between icon and text */
+      }
+
+
+  </style>
   <body class="iq-page-menu-horizontal">
     <!-- loader Start -->
     <div id="loading">
@@ -304,7 +388,7 @@
                            <div class="iq-email-listbox">
                               <div class="tab-content">
                                  <div class="tab-pane fade show active" id="mail-inbox" role="tabpanel">
-                                    <ul class="iq-email-sender-list">
+                                    <ul class="iq-email-sender-list" id="directory-list">
 
                                      
                                        <li>
@@ -323,12 +407,7 @@
                                                 </a>
                                                 <div class="iq-email-date">11:49 am</div>
                                              </div>
-                                             <ul class="iq-social-media">
-                                                <li><a href="#"><i class="ri-delete-bin-2-line"></i></a></li>
-                                                <li><a href="#"><i class="ri-mail-line"></i></a></li>
-                                                <li><a href="#"><i class="ri-file-list-2-line"></i></a></li>
-                                                <li><a href="#"><i class="ri-time-line"></i></a></li>
-                                             </ul>
+                                            
                                           </div>
                                        </li>
                                        <div class="email-app-details">
@@ -351,9 +430,12 @@
                                                       </div>
                                                    </div>
                                                    <hr class="mt-0">
+                                                 
                                                    <div class="iq-inbox-subject p-3">
                                                       <div class="iq-inbox-subject-info">
-                                                         <div class="file-list-container">
+                                                         <h3>Temukan File Anda</h3>
+
+                                                         <div class="file-list-container" id="file-list-container">
                                                             <div class="file-entry">
                                                                <i class="mdi mdi-file-document-outline"></i>
                                                                <span class="file-name">File Untuk Jurnal</span>
@@ -362,6 +444,26 @@
                                                                    <i class="mdi mdi-delete" onclick="deleteFile('File Untuk Jurnal');"></i> 
                                                                </div>
                                                            </div>
+                                                           <div class="file-entry folder" onclick="toggleFolder('folder1Contents')">
+                                                            <i class="mdi mdi-folder"></i>
+                                                            <span class="file-name">Folder NN222L</span>
+                                                          </div>
+                                                          <div id="folder1Contents" class="folder-contents" style="display: none;">
+                                                            <div class="file-entry">
+                                                              <i class="mdi mdi-file-document-outline"></i>
+                                                              <span class="file-name">Subfile 1.docx</span>
+                                                            </div>
+                                                            <div class="file-entry folder" onclick="toggleFolder('subFolder1')">
+                                                              <i class="mdi mdi-folder"></i>
+                                                              <span class="file-name">Sub Folder 1</span>
+                                                            </div>
+                                                            <div id="subFolder1" class="folder-contents" style="display: none;">
+                                                              <div class="file-entry">
+                                                                <i class="mdi mdi-file-document-outline"></i>
+                                                                <span class="file-name">Sub Subfile 1.txt</span>
+                                                              </div>
+                                                            </div>
+                                                         </div>
                                                         </div>
                                                          <div class="iq-inbox-body mt-5">
                                                             
@@ -376,6 +478,7 @@
                                              </div>
                                           </div>
                                        </div>
+                                       
                                     </ul>
                                  </div>
                                 
@@ -398,11 +501,11 @@
           <div class="col-lg-6">
             <ul class="list-inline mb-0">
               <li class="list-inline-item">
-                <a href="privacy-policy.html">Privacy Policy</a>
+                <!-- <a href="privacy-policy.html">Privacy Policy</a> -->
               </li>
-              <li class="list-inline-item">
+              <!-- <li class="list-inline-item">
                 <a href="terms-of-service.html">Terms of Use</a>
-              </li>
+              </li> -->
             </ul>
           </div>
           <div class="col-lg-6 text-right">
@@ -413,6 +516,8 @@
     </footer>
     <!-- Frontend  -->
     <script type="module" src="./js/navbar/navbar.js"></script>
+    <script type="module" src="./js/d4if/dashboard.js"></script>
+
     <!-- Footer END -->
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -456,70 +561,16 @@
     <script src="js/chart-custom.js"></script>
     <!-- Custom JavaScript -->
     <script src="js/custom.js"></script>
+    <script>function toggleFolder(elementId) {
+      var element = document.getElementById(elementId);
+      if (element.style.display === "none") {
+          element.style.display = "block";  // Show the contents
+      } else {
+          element.style.display = "none";  // Hide the contents
+      }
+  }
+  </script>
+  <!-- <script type="module" src="./js/d4if/dashboard.js"></script> -->
   </body>
-  <style>
-
-   .file-list-container {
-      height: 100%; /* Set a fixed height according to your design needs */
-      overflow-y: auto; /* Enables vertical scrolling */
-      border: 1px solid #ffffff; /* Optional: adds a border around the scrollable area */
-      padding: 10px; /* Optional: adds some spacing inside the container */
-      margin: 10px 0; /* Optional: adds some margin outside the container */
-      background-color: #fff; /* Optional: sets a background color */
-      box-shadow: 0 2px 6px rgba(133, 80, 80, 0.1); /* Optional: adds a subtle shadow for depth */
-   }
-
-
-   .file-entry:hover {
-      background-color: #e8e8e8; /* Changes background on hover */
-   }
-
-  .file-entry {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Align items to the left */
-    margin: 10px;
-    padding: 10px;
-    width: auto; /* Adjust width as per content */
-    background-color: #ffffff; /* Clean white background */
-    border: 1px solid #e0e0e0; /* Subtle border */
-    border-radius: 8px; /* Rounded corners for modern look */
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.1); /* Soft shadow for depth */
-    transition: all 0.3s ease; /* Smooth transition for hover effects */
-}
-
-.file-entry {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    margin-bottom: 5px;
-    background-color: #f9f9f9;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-}
-
-.file-name {
-    flex-grow: 1; /* Ensures the name takes up available space */
-    margin-left: 10px; /* Space between icon and text */
-}
-
-.file-actions i {
-    margin-left: 10px; /* Space between icons */
-    cursor: pointer; /* Indicates clickable */
-    color: #666; /* Default icon color */
-}
-
-.file-actions i:hover {
-    color: #333; /* Darker color on hover for better visibility */
-}
-
-.mdi {
-    font-size: 24px; /* Icon size */
-    color: #5f6368; /* Icon color, dark grey */
-    margin-right: 10px; /* Space between icon and text */
-}
-
-
-  </style>
+ 
 </html>
