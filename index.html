@@ -1,238 +1,149 @@
-<!--
-Template Name: Taildash - Tailwind Dashboard Admin Template
-Author: Aribudin
-Website: https://www.tailwinddashboard.com
-Contact: support@tailwinddashboard.com
-Purchase: https://themes.tailwindtemplate.net/taildash
-License: You must have a valid license purchased only from official store (the above link) in order to legally use the theme for your project.
--->
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Selamat Datang ||Repository Universitas Logistik & Bisnis Internasional</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="css/tailwind/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
-  <!-- Title  -->
-  <title>Taildash | Tailwind Dashboard Template</title>
-  <meta name="description" content="Tailwind Dashboard Template">
-
-  <!-- Development css (used in all pages) -->
-  <link rel="stylesheet" id="stylesheet" href="src/css/style.css">
-  <!-- Production css (used in all pages) -->
-  <!-- <link rel="stylesheet" href="dist/css/style.css"> -->
-
-  <!--start::Customizer Stylesheets (Only for demo purpose)-->
-  <link rel="stylesheet" href="src/css/customizer.css">
-  <!--end::Customizer Stylesheets (Only for demo purpose)-->
-  <script src="./js/croot.js"> </script>
-  <!-- google font -->
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
-
-  <!-- Favicon  -->
-  <link rel="icon" href="src/img/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32"href="https://www.ulbi.ac.id/favicon.ico"">
+    <script src="js/main.js"></script>
 </head>
-<body class="font-sans text-base font-normal text-gray-600 dark:text-gray-400 dark:bg-gray-800">
-  <!-- wrapper -->
-  <div x-data="{ open: false }" class="wrapper overflow-x-hidden bg-gray-100 dark:bg-gray-900 dark:bg-opacity-40">
-    <nav id="sidebar-menu" x-description="Mobile menu" x-bind:aria-expanded="open" :class="{ 'w-64 md:w-0': open, 'w-0 md:w-64': !(open) }" class="fixed w-64 transition-all duration-500 ease-in-out h-screen bg-white dark:bg-gray-800 shadow-sm">
-      <div class="h-full overflow-y-auto scrollbars">
-        <!--logo-->
-        <div class="mh-18 text-center py-5">
-          <a href="file-manager.html#" class="relative">
-            <h2 class="text-2xl font-semibold text-gray-200 px-4 max-h-9 overflow-hidden hidden-compact">
-             <!--ini tarok gambar aja -->
-             <img class="inline-block w-7 h-auto ltr:mr-2 rtl:ml-2 -mt-1" src="src/img/logo.png">
-
-              </svg><span class="text-gray-700 dark:text-gray-200">Repositori</span>
-            <h2 class="text-3xl font-semibold mx-auto logo-compact hidden">
-              <!-- <img class="inline-block w-7 h-auto -mt-1" src="src/img/logo.png"> -->
-              <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-7 h-7 -mt-1" viewBox="0 0 300.000000 300.000000"> 
-                <g transform="translate(0.000000,300.000000) scale(0.100000,-0.100000)" fill="currentColor" stroke="none">
-                  <path class="text-pink-500" d="M1225 2825 c-546 -115 -959 -534 -1065 -1080 -28 -147 -28 -373 0
-                  -520 81 -419 350 -774 728 -964 115 -58 120 -58 65 3 -27 29 -65 84 -85 122
-                  -68 131 -90 236 -89 428 0 229 44 470 167 923 41 149 74 275 74 278 0 4 -102
-                  5 -227 3 -198 -4 -236 -7 -290 -25 -35 -12 -63 -18 -63 -14 0 4 22 43 49 87
-                  58 93 123 157 177 175 22 6 124 14 234 16 l195 5 33 112 c91 305 200 431 405
-                  465 43 7 31 9 -73 9 -94 1 -152 -5 -235 -23z"/>
-                  <path class="text-indigo-500" d="M1695 2763 c-48 -77 -122 -231 -179 -375 -25 -65 -46 -120 -46 -123
-                  0 -7 995 -6 1069 1 34 4 61 12 61 18 0 6 -30 46 -65 88 -170 201 -426 361
-                  -687 428 -110 29 -111 28 -153 -37z"/>
-                  <path class="text-indigo-500" d="M2660 2104 c-33 -36 -54 -47 -120 -67 -21 -6 -256 -12 -595 -16
-                  l-560 -6 -51 -180 c-62 -215 -116 -445 -144 -608 -74 -435 -37 -655 124 -740
-                  62 -32 189 -30 274 5 174 72 337 212 410 353 l20 40 24 -50 c32 -70 32 -162
-                  -1 -229 -48 -97 -216 -250 -383 -347 -86 -51 -170 -85 -261 -109 l-69 -17 94
-                  -6 c469 -33 947 205 1214 605 229 342 291 790 163 1173 -24 70 -76 192 -94
-                  217 -10 16 -14 14 -45 -18z"/>
-                </g>
-              </svg>
-            </h2>
-          </a>
-        </div>
-
-        <!-- Sidebar menu -->
-        
-
-        <!-- Banner -->
-        <div class="px-4 box-banner">
-          <div class="my-8 p-4 text-center bg-gray-300 dark:bg-gray-700 bg-opacity-50 rounded-lg">
-            <h4 class="font-bold inline-block mb-2">Repositori D4 Teknik Informatika</h4>
-            <div class="mb-3 text-sm">
-            Silahkan Pilih Repositori Anda
+<body class="antialiased bg-body text-body font-body">
+<div class="">
+          
+      <section>
+        <div class="container px-4 mx-auto">
+          <nav class="flex justify-between items-center py-6">
+            <a class="text-3xl font-semibold leading-none" href="https://repo.ulbi.ac.id/">
+              <img class="h-10 mr-6" src="assets/images/LOGO.png">
+            </a>
+            <div class="lg:hidden">
+              <button class="navbar-burger flex items-center py-2 px-3 text-blue-600 hover:text-blue-700 rounded border border-blue-200 hover:border-blue-300">
+                <svg class="fill-current h-4 w-4" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <title>Mobile menu</title>
+                  <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
+                </svg>
+              </button>
             </div>
-            
-           
-          </div>
-        </div><!-- end banner -->
+            <ul class="hidden lg:flex lg:items-center lg:w-auto lg:space-x-12">
+              <li>
+              <li>
+              <li>
+              <li>
+            </ul>
+            <div class="hidden lg:block">
+      
       </div>
-    </nav>
-
-    <div x-bind:aria-expanded="open" :class="{ 'ltr:ml-64 ltr:-mr-64 md:ltr:ml-0 md:ltr:mr-0 rtl:mr-64 rtl:-ml-64 md:rtl:mr-0 md:rtl:ml-0': open, 'ltr:ml-0 ltr:mr-0 md:ltr:ml-64 rtl:mr-0 rtl:ml-0 md:rtl:mr-64': !(open) }" class="flex flex-col ltr:ml-64 rtl:mr-64 min-h-screen transition-all duration-500 ease-in-out">
-      <!-- Navbar -->
-      <nav :class="{ 'ltr:left-64 ltr:-right-64 md:ltr:left-0 md:ltr:right-0 rtl:right-64 rtl:-left-64 md:rtl:right-0 md:rtl:left-0': open, 'ltr:left-0 ltr:right-0 md:ltr:left-64 rtl:right-0 rtl:left-0 md:rtl:right-64': !(open) }" class="z-50 fixed flex flex-row flex-nowrap items-center justify-between mt-0 py-2 ltr:left-0 md:ltr:left-64 ltr:right-0 rtl:right-0 md:rtl:right-64 rtl:left-0 px-6 bg-white dark:bg-gray-800 shadow-sm transition-all duration-500 ease-in-out" id="desktop-menu">
-        <!-- sidenav button-->
-        <button id="navbartoggle" type="button" class="inline-flex items-center justify-center text-gray-800 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-200 focus:outline-none focus:ring-0" aria-controls="sidebar-menu" @click="open = !open" aria-expanded="false" x-bind:aria-expanded="open.toString()">
-          <span class="sr-only">Mobile menu</span>
-          <svg x-description="Icon open" x-state:on="Menu open" x-state:off="Menu closed" class="hidden h-8 w-8" :class="{ 'block': open, 'hidden': !(open) }" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
-            <path class="hidden md:block" fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
-            <path class="md:hidden" d="M2 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-          </svg>
-
-          <svg x-description="Icon closed" x-state:on="Menu open" x-state:off="Menu closed" class="block h-8 w-8" :class="{ 'hidden': open, 'block': !(open) }" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-filter-left" viewBox="0 0 16 16">
-            <path class="md:hidden" fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
-            <path class="hidden md:block" d="M2 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-          </svg>
-          <!-- <i class="text-2xl fas fa-bars"></i> -->
-        </button>
-
-        <!-- Search -->
-        
-
-        <!-- menu -->
-        
-      </nav>
-      <!-- End Navbar -->
-
-      <main class="pt-20 -mt-2">
-        <div class="mx-auto p-2">
-          <!-- row -->
-          <div class="flex flex-wrap flex-row">
-            <div class="flex-shrink max-w-full px-4 w-full">   
-              <h1 class="text-xl font-bold mt-3 mb-5"></h1>
-            </div>                                                 
-            <div class="flex-shrink max-w-full px-4 w-full mb-6">
-              <div class="py-6 px-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg h-full">
-                <div class="relative">
-                  <div class="flex flex-wrap flex-row -mx-4">
-                    <div class="flex-shrink max-w-full px-4 w-full">
-                      <div class="md:flex md:justify-between mb-6">
-                        
-                        <!-- search -->
-                        
-                      </div>
-                    </div>
-                  </div>
-                  <!-- vertical tabs -->
-                  <div x-data="{ tabs: 1 }" class="flex flex-wrap flex-row -mx-4">
-                    <div class="flex-shrink max-w-full px-4 w-full">
-                      <div  x-data="{ tab: 'all' }" class="relative">
-                        <!-- filter start -->
-                        
-                        <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-200 mb-3">My Files</h3>
-                        <!-- content filter start -->
-                        <table class="table-auto w-full ltr:text-left rtl:text-right text-sm">
-                          <thead class="bg-gray-100 dark:bg-gray-900 dark:bg-opacity-40">
-                            <tr>
-                              <th class="px-4 py-3 font-normal">File name</th>
-                          
-
-                              <th class="px-4 py-3 font-normal hidden md:table-cell">Last modified</th>
-                              <th class="px-4 py-3 font-normal text-center">Action</th>
-                            </tr>
-                          </thead>
-                          <tbody id="userlist">
-                            
-                            <tr  x-show="tab === 'others' || tab === 'all'">
-                              <td class="px-4 py-3 font-medium">
-                                <a href="javascript:;">
-                                  <span class="mr-1 text-indigo-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="inline-block bi bi-folder-fill" viewBox="0 0 16 16">
-                                      <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3zm-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139z"/>
-                                    </svg>
-                                  </span>My Projects (12)
-                                </a>
-                              </td>
-                                <td  class="px-4 py-3 font-medium hidden md:table-cell"></td>
-
-                              <td class="px-4 py-3 font-medium text-center">
-                                
-                                <a class="inline-block ltr:mr-2 rtl:ml-2 hover:text-green-500" >
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                                  </svg>
-                                </a>
-                              </td>
-                            </tr>
-                            
-                            
-                            
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
+          </nav>
+          <div class="flex flex-wrap items-center -mx-3">
+            <div class="w-full lg:w-1/2 px-3">
+              <div class="py-12">
+                <div class="max-w-lg lg:max-w-md mx-auto lg:mx-0 mb-8 text-center lg:text-left">
+                  <h2 class="text-3xl md:text-4xl mb-4 font-bold font-heading">
+                    <span>Selamat Datang</span>
+                    <span class="text-blue-600 animate__animated animate__bounce animate__delay-2s" ><span class="text-orange-600" >Di Repository</span> ULBI</span>
+                  </h2>
+                  <p class="text-blueGray-400 leading-relaxed text-justify">Selamat datang di repositori ULBI Repositori ini adalah wadah digital yang berisi kumpulan berbagai macam informasi, data, dan dokumen. Repositori ini hadir sebagai salah satu upaya ULBI untuk mempermudah akses informasi bagi semua pihak yang membutuhkan.  Mari bersama-sama menjaga dan memanfaatkan repositori ini dengan baik.</p>
                 </div>
+                
+              </div>
+            </div>
+            <div class="w-full lg:w-1/2 px-3 mb-12 lg:mb-0">
+              <div class="lg:h-128 flex items-center justify-center">
+                <img class="lg:max-w-lg" src="metis-assets/illustrations/work-tv.png" alt="">
               </div>
             </div>
           </div>
         </div>
-      </main>
-
-			<!-- <footer class="bg-white dark:bg-gray-800 p-6 shadow-sm">
-        <div class="mx-auto">
-          <div class="flex flex-wrap flex-row -mx-4">
-            <div class="flex-shrink max-w-full px-4 w-full md:w-1/2 text-center md:ltr:text-left md:rtl:text-right">
-              
+        <div class="hidden navbar-menu fixed top-0 left-0 bottom-0 w-5/6 max-w-sm z-50">
+          <div class="navbar-backdrop fixed inset-0 bg-blueGray-800 opacity-25"></div>
+          <nav class="relative flex flex-col py-6 px-6 w-full h-full bg-white border-r overflow-y-auto">
+            <div class="flex items-center mb-8">
+              <a class="mr-auto text-3xl font-semibold leading-none" href="#">
+                <img class="h-10" src="metis-assets/logos/metis/metis.svg" alt="" width="auto">
+              </a>
+              <button class="navbar-close">
+                <svg class="h-6 w-6 text-blueGray-400 cursor-pointer hover:text-blueGray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
             </div>
-            <div class="flex-shrink max-w-full px-4 w-full md:w-1/2 text-center md:ltr:text-right md:rtl:text-left">
-              <p class="mb-0 mt-3 md:mt-0">
-                <a href="index.html" class="hover:text-indigo-500">Tailnet</a> | All right reserved
+            <div>
+              <ul>
+                <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-blue-50 hover:text-blue-600" href="#">Repository</a></li>
+                <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-blue-50 hover:text-blue-600" href="#">Company</a></li>
+                <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-blue-50 hover:text-blue-600" href="#">About Us</a></li>
+                <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-blue-50 hover:text-blue-600" href="#">Features</a></li>
+              </ul>
+              <div class="mt-4 pt-6 border-t border-blueGray-100">
+      <a class="block px-4 py-3 mb-3 text-xs text-center font-semibold leading-none bg-blue-600 hover:bg-blue-700 text-white rounded" href="#">Sign Up</a><a class="block px-4 py-3 mb-2 text-xs text-center text-blue-600 hover:text-blue-700 font-semibold leading-none border border-blue-200 hover:border-blue-300 rounded" href="#">Log In</a>
+      </div>
+            </div>
+            <div class="mt-auto">
+              <p class="my-4 text-xs text-blueGray-400">
+                <span>Get in Touch</span>
+                <a class="text-blue-600 hover:text-blue-600 underline" href="#">info@example.com</a>
               </p>
+              <a class="inline-block px-1" href="#">
+                <img src="metis-assets/icons/facebook-blue.svg" alt="">
+              </a>
+              <a class="inline-block px-1" href="#">
+                <img src="metis-assets/icons/twitter-blue.svg" alt="">
+              </a>
+              <a class="inline-block px-1" href="#">
+                <img src="metis-assets/icons/instagram-blue.svg" alt="">
+              </a>
+            </div>
+          </nav>
+        </div>
+      </section>
+
+      <section class="pt-20 pb-24 bg-orange-600">
+        <div class="max-w-xl mx-auto text-center">
+      
+          <h2 class="mt-3 text-3xl md:text-4xl text-white font-bold font-heading">Silahkan Pilih Repositori Anda</h2>
+          <div class="mt-6"><a class="inline-block text-xs py-4 px-8 bg-white hover:bg-blue-600 text-blue-600 hover:text-white font-semibold leading-none border hover:border-white rounded transition duration-300" href="all_prodi_repo.html">Check Now</a></div>
+        </div>
+      </section>
+
+      <section class="py-20">
+        <div class="container px-4 mx-auto">
+          <div class="flex flex-wrap mb-12 lg:mb-20 -mx-3 text-center lg:text-left">
+            <div class="w-full lg:w-1/5 px-3 mb-6 lg:mb-0">
+              <a class="inline-block mx-auto lg:mx-0 text-3xl font-semibold leading-none" href="#">
+              </a>
+            </div>
+            <div class="w-full lg:w-2/5 px-3 mb-8 lg:mb-0">
+              <p class="max-w-md mx-auto lg:max-w-full lg:mx-0 lg:pr-32 lg:text-lg text-blueGray-400 leading-relaxed"></p>
+            </div>
+            
+          </div>
+          <div class="flex flex-col lg:flex-row items-center lg:justify-between">
+            <p class="text-xs text-blueGray-400">© 2023. DTI DIREKTORAT TEKNOLOGI INFORMASI.</p>
+            <!-- <div class="order-first lg:order-last -mx-2 mb-4 lg:mb-0">
+              <a class="inline-block px-2" href="#">
+                <img src="metis-assets/icons/facebook-blue.svg" alt="">
+              </a>
+              <a class="inline-block px-2" href="#">
+                <img src="metis-assets/icons/twitter-blue.svg" alt="">
+              </a>
+              <a class="inline-block px-2" href="#">
+                <img src="metis-assets/icons/instagram-blue.svg" alt="">
+              </a>
+            </div> -->
+         
+            <div class="w-full lg:w-1/5 px-3">
+              <p class="mb-2 lg:mb-4 lg:text-lg font-bold font-heading text-blueGray-800">Contacts</p>
+              <p class="lg:text-lg text-blueGray-400">+62 895-0187-051</p>
             </div>
           </div>
         </div>
-      </footer> -->
-    </div>
+      </section>
   </div>
-
-  <!--start::Global javascript (used in all pages)-->
-  <script src="vendors/alpinejs/dist/cdn.min.js"></script><!-- core js -->
-  <script src="vendors/chart.js/dist/chart.min.js"></script><!-- charts -->
-  <script src="vendors/flatpickr/dist/flatpickr.min.js"></script><!-- input date -->
-  <script src="vendors/flatpickr/dist/plugins/rangePlugin.js"></script><!-- input range date -->
-  <script src="vendors/@yaireo/tagify/dist/tagify.min.js"></script><!-- input tags -->
-  <script src="vendors/pristinejs/dist/pristine.min.js"></script><!-- form validation -->
-  <script src="vendors/simple-datatables/dist/umd/simple-datatables.js"></script><!--sort table-->
-  <script src="vendors/glightbox/dist/js/glightbox.min.js"></script><!-- lightbox image -->
-  <script src="vendors/flickity/dist/flickity.pkgd.min.js"></script><!-- slider -->
-  <!--end::Global javascript (used in all pages)-->
-
-  <!-- Minify Global javascript (for production purpose) -->
-  <!-- <script src="dist/js/scripts.js"></script> -->
-
-  <!--start::Vendor javascript (only on this page)-->
-  <script src="vendors/dropzone/dist/min/dropzone.min.js"></script><!-- uploader images -->
-  <!--end::Vendor javascript (only on this page)-->
-
-  <!--start::Demo javascript ( initialize global javascript )-->
-  <script src="src/js/demo.js"></script>
-
-  <!--start::Call vendor ( initialize vendor javascript )-->
-  <script src="src/js/vendor.js"></script>
-
-  <!--start::Customizer js ( Only for demo purpose )-->
-  <script src="src/js/customizer.js"></script>
 </body>
 </html>
+
