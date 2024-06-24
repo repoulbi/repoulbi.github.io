@@ -32,86 +32,83 @@
   </head>
   <style>
       .folder-contents {
-         padding-left: 20px; /* Indent contents to show nesting */
-         display: none;
-      }
+    padding-left: 20px; /* Indent contents to show nesting */
+    display: none;
+  }
 
-      .file-entry {
-         cursor: pointer;
-         padding: 10px;
-         background-color: #f0f0f0;
-         border-radius: 5px;
-         margin: 5px 0;
-         transition: background-color 0.3s;
-      }
+  .file-entry {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin: 5px 0;
+    transition: background-color 0.3s;
+  }
 
-      .file-entry:hover {
-         background-color: #e0e0e0;
-      }
+  .file-entry:hover {
+    background-color: #e0e0e0;
+  }
 
-      .folder {
-         background-color: #eef1f7;
-      }
+  .folder {
+    background-color: #eef1f7;
+  }
 
-      .folder:hover {
-         background-color: #dde1e7;
-      }
+  .folder:hover {
+    background-color: #dde1e7;
+  }
 
-      h3 {
-         color: #333; /* Dark color for header text */
-         margin-bottom: 2%; /* Space between header and file entries */
-      }
-      .file-list-container {
-      height: 100%;
-      overflow-y: auto;
-      border: 1px solid #ffffff;
-      padding: 10px;
-      margin: 10px 0;
-      background-color: #fff;
-      box-shadow: 0 2px 6px rgba(133, 80, 80, 0.1);
-    }
+  h3 {
+    color: #333; /* Dark color for header text */
+    margin-bottom: 2%; /* Space between header and file entries */
+  }
+  .file-list-container {
+    height: 100%;
+    overflow-y: auto;
+    border: 1px solid #ffffff;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(133, 80, 80, 0.1);
+  }
 
-         .file-entry:hover {
-            background-color: #ececec; /* Changes background on hover */
-         }
+  .file-entry:hover {
+    background-color: #ececec; /* Changes background on hover */
+  }
 
-      .file-entry {
-         display: flex;
-         align-items: center;
-         justify-content: flex-start; /* Align items to the left */
-         margin: 10px;
-         padding: 10px;
-         width: auto; /* Adjust width as per content */
-         background-color: #ffffff; /* Clean white background */
-         border: 1px solid #e0e0e0; /* Subtle border */
-         border-radius: 8px; /* Rounded corners for modern look */
-         box-shadow: 2px 2px 6px rgba(0,0,0,0.1); /* Soft shadow for depth */
-         transition: all 0.3s ease; /* Smooth transition for hover effects */
-      }
+  .file-entry {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align items to the left */
+    margin: 10px;
+    padding: 10px;
+    width: auto; /* Adjust width as per content */
+    background-color: #ffffff; /* Clean white background */
+    border: 1px solid #e0e0e0; /* Subtle border */
+    border-radius: 8px; /* Rounded corners for modern look */
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.1); /* Soft shadow for depth */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+  }
 
-      
+  .file-name {
+    flex-grow: 1; /* Ensures the name takes up available space */
+    margin-left: 10px; /* Space between icon and text */
+  }
 
-      .file-name {
-         flex-grow: 1; /* Ensures the name takes up available space */
-         margin-left: 10px; /* Space between icon and text */
-      }
+  .file-actions i {
+    margin-left: 10px; /* Space between icons */
+    cursor: pointer; /* Indicates clickable */
+    color: #666; /* Default icon color */
+  }
 
-      .file-actions i {
-         margin-left: 10px; /* Space between icons */
-         cursor: pointer; /* Indicates clickable */
-         color: #666; /* Default icon color */
-      }
+  .file-actions i:hover {
+    color: #312121; /* Darker color on hover for better visibility */
+  }
 
-      .file-actions i:hover {
-         color: #312121; /* Darker color on hover for better visibility */
-      }
-
-      .mdi {
-         font-size: 24px; /* Icon size */
-         color: #5f6368; /* Icon color, dark grey */
-         margin-right: 10px; /* Space between icon and text */
-      }
-
+  .mdi {
+    font-size: 24px; /* Icon size */
+    color: #5f6368; /* Icon color, dark grey */
+    margin-right: 10px; /* Space between icon and text */
+  }
 
   </style>
   <body class="iq-page-menu-horizontal">
@@ -410,7 +407,7 @@
                                             
                                           </div>
                                        </li>
-                                       <div class="email-app-details">
+                                       <div class="email-app-details wow animate__animated animate__slideInRight" style="display: none;" >
                                           <div class="iq-card">
                                              <div class="iq-card-body p-0">
                                                 <div class="">
@@ -444,10 +441,7 @@
                                                                    <i class="mdi mdi-delete" onclick="deleteFile('File Untuk Jurnal');"></i> 
                                                                </div>
                                                            </div>
-                                                           <div class="file-entry folder" onclick="toggleFolder('folder1Contents')">
-                                                            <i class="mdi mdi-folder"></i>
-                                                            <span class="file-name">Folder NN222L</span>
-                                                          </div>
+                                                          
                                                           <div id="folder1Contents" class="folder-contents" style="display: none;">
                                                             <div class="file-entry">
                                                               <i class="mdi mdi-file-document-outline"></i>
@@ -517,7 +511,8 @@
     <!-- Frontend  -->
     <script type="module" src="./js/navbar/navbar.js"></script>
     <script type="module" src="./js/d4if/dashboard.js"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
     <!-- Footer END -->
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
