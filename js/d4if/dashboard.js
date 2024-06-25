@@ -1,5 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
   const baseApiUrl = "https://api.github.com/repos/repoulbi/d4if/contents/";
+  const foldersToHide = [
+    ".vscode",
+    "assets",
+    "vendors",
+    "css",
+    "js",
+    "metis-assets",
+    "src",
+  ];
   window.directoryStack = [baseApiUrl]; // Starting with the base directory
 
   window.fetchData = function (url) {
@@ -22,7 +31,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // If at the base, show only directories, otherwise show all items
         const itemsToShow = isBaseFetch
-          ? data.filter((item) => item.type === "dir")
+          ? data.filter(
+              (item) =>
+                item.type === "dir" && !foldersToHide.includes(item.name)
+            )
           : data;
 
         if (!window.directoryStack.includes(url)) {
