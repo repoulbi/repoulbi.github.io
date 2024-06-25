@@ -52,46 +52,69 @@ document.addEventListener("DOMContentLoaded", function () {
     if (showBackButton) {
       const backButton = document.createElement("li");
       backButton.innerHTML = `
-                <div class="d-flex align-self-center iq-email-sender-info">
-                  <a href="javascript:void(0);" onclick="window.handleBackAction()" class="back-button">
-                    <i class="ri-arrow-left-line"></i> Back
-                  </a>
-                </div>`;
+                    <div class="d-flex align-self-center iq-email-sender-info">
+                      <a href="javascript:void(0);" onclick="window.handleBackAction()" class="back-button">
+                        <i class="ri-arrow-left-line"></i> Back
+                      </a>
+                    </div>`;
       listContainer.appendChild(backButton);
     }
 
     // Append each directory or file to the list
     data.forEach((item) => {
+      const isImage =
+        item.type === "file" && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name);
       const itemElement = document.createElement("li");
       itemElement.className =
         "d-flex justify-content-between align-items-center";
       itemElement.innerHTML = `
-                <div class="iq-email-sender-info">
-                  <div class="iq-checkbox-mail">
-                    <i class="mdi ${
-                      item.type === "dir"
-                        ? "mdi-folder"
-                        : "mdi-file-document-outline"
-                    }"></i>
-                  </div>
-                  <a href="javascript:void(0);" class="iq-email-title" onclick="window.handleItemClick('${
-                    item.url
-                  }', '${item.type}')">${item.name}</a>
-                </div>
-                <div class="file-actions">
-                  ${
-                    item.type === "file" && item.download_url
-                      ? `<a class="link-secondary download-link" href="javascript:void(0);" data-url="${item.download_url}" onclick="window.downloadFile('${item.download_url}')">Download</a>`
-                      : ""
-                  }
-                  <a href="javascript:void(0);" class="link-danger" onclick="window.deleteFile('${
-                    item.path
-                  }')">Delete</a>
-                </div>`;
+                    <div class="iq-email-sender-info">
+                      <div class="iq-checkbox-mail">
+                        <i class="mdi ${
+                          item.type === "dir"
+                            ? "mdi-folder"
+                            : "mdi-file-document-outline"
+                        }"></i>
+                      </div>
+                      <a href="javascript:void(0);" class="iq-email-title" onclick="window.handleItemClick('${
+                        item.url
+                      }', '${item.type}')">${item.name}</a>
+                    </div>
+                    <div class="file-actions">
+                      ${
+                        item.type === "file" && item.download_url
+                          ? `<button class="btn btn-secondary download-btn" data-url="${item.download_url}" data-is-image="${isImage}">Download</button>`
+                          : ""
+                      }
+                      <button class="btn btn-danger delete-btn" data-path="${
+                        item.path
+                      }">Delete</button>
+                    </div>`;
       listContainer.appendChild(itemElement);
     });
 
-    // No need to add event listeners for download links as they are now directly bound by onclick
+    // Add event listeners for download and delete buttons
+    document.querySelectorAll(".download-btn").forEach((button) => {
+      button.addEventListener("click", function () {
+        const downloadUrl = this.getAttribute("data-url");
+        const isImage = this.getAttribute("data-is-image") === "true";
+        if (isImage) {
+          window.open(
+            "https://raw.githubusercontent.com/repoulbi/d4if/main/assets/images/logo.svg",
+            "_blank"
+          );
+        } else {
+          window.downloadFile(downloadUrl);
+        }
+      });
+    });
+
+    document.querySelectorAll(".delete-btn").forEach((button) => {
+      button.addEventListener("click", function () {
+        const filePath = this.getAttribute("data-path");
+        window.deleteFile(filePath);
+      });
+    });
   }
 
   window.handleBackAction = function () {
@@ -114,7 +137,19 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 window.downloadFile = function (downloadUrl) {
-  window.open(downloadUrl, "_blank");
+  if (!downloadUrl) {
+    console.error("No download URL provided.");
+    alert("Download URL not available for this item.");
+    return;
+  }
+
+  // Create a temporary link element and trigger the download
+  const link = document.createElement("a");
+  link.href = downloadUrl;
+  link.setAttribute("download", "");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
 
 window.deleteFile = function (path) {
