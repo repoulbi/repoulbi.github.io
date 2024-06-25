@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     listContainer.innerHTML = ""; // Clear previous entries
 
-    // Optionally add a back button
+    // Optionally add a back button and upload button
     if (showBackButton) {
       const backButton = document.createElement("li");
       backButton.innerHTML = `
@@ -56,8 +56,23 @@ document.addEventListener("DOMContentLoaded", function () {
             <a href="javascript:void(0);" onclick="window.handleBackAction()" class="btn btn-primary back-button">
               <i class="ri-arrow-left-line"></i> Back
             </a>
+            <div class="upload-container">
+              <input type="file" id="uploadFileInput" class="upload-input" />
+              <button class="btn btn-success upload-btn" onclick="document.getElementById('uploadFileInput').click();">Choose File</button>
+              <span id="fileName" class="file-name">No file chosen</span>
+              <button class="btn btn-info upload-file-btn" onclick="window.handleUploadClick('${baseApiUrl}')">Upload File</button>
+            </div>
           </div>`;
       listContainer.appendChild(backButton);
+
+      // Add event listener for file input
+      const uploadFileInput = document.getElementById("uploadFileInput");
+      uploadFileInput.addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        document.getElementById("fileName").textContent = file
+          ? file.name
+          : "No file chosen";
+      });
     }
 
     // Append each directory or file to the list
@@ -66,28 +81,26 @@ document.addEventListener("DOMContentLoaded", function () {
       itemElement.className =
         "d-flex justify-content-between align-items-center";
       itemElement.innerHTML = `
-                    <div class="iq-email-sender-info">
-                      <div class="iq-checkbox-mail">
-                        <i class="mdi ${
-                          item.type === "dir"
-                            ? "mdi-folder"
-                            : "mdi-file-document-outline"
-                        }"></i>
-                      </div>
-                      <a href="javascript:void(0);" class="iq-email-title" onclick="window.handleItemClick('${
-                        item.url
-                      }', '${item.type}')">${item.name}</a>
-                    </div>
-                    <div class="file-actions">
-                      ${
-                        item.type === "file" && item.download_url
-                          ? `<button class="btn btn-secondary download-btn" data-url="${item.download_url}" data-name="${item.name}">Download</button>`
-                          : ""
-                      }
-                      <button class="btn btn-danger delete-btn" data-path="${
-                        item.path
-                      }">Delete</button>
-                    </div>`;
+          <div class="iq-email-sender-info">
+            <div class="iq-checkbox-mail">
+              <i class="mdi ${
+                item.type === "dir" ? "mdi-folder" : "mdi-file-document-outline"
+              }"></i>
+            </div>
+            <a href="javascript:void(0);" class="iq-email-title" onclick="window.handleItemClick('${
+              item.url
+            }', '${item.type}')">${item.name}</a>
+          </div>
+          <div class="file-actions">
+            ${
+              item.type === "file" && item.download_url
+                ? `<button class="btn btn-secondary download-btn" data-url="${item.download_url}" data-name="${item.name}">Download</button>`
+                : ""
+            }
+            <button class="btn btn-danger delete-btn" data-path="${
+              item.path
+            }">Delete</button>
+          </div>`;
       listContainer.appendChild(itemElement);
     });
 
@@ -151,6 +164,95 @@ window.downloadFile = function (downloadUrl, fileName) {
   }
 };
 
+window.getToken = function () {
+  const tokenFromLocalStorage = localStorage.getItem("login");
+  if (tokenFromLocalStorage) {
+    return tokenFromLocalStorage;
+  }
+
+  const cookieMatch = document.cookie.match(new RegExp("(^| )login=([^;]+)"));
+  if (cookieMatch) {
+    return cookieMatch[2];
+  }
+
+  return null;
+};
+
+window.handleUploadClick = function (baseApiUrl) {
+  const uploadFileInput = document.getElementById("uploadFileInput");
+  const file = uploadFileInput.files[0];
+  if (file) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to upload the file "${file.name}"`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, upload it!",
+      cancelButtonText: "No, cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.uploadFile(file, baseApiUrl);
+      }
+    });
+  } else {
+    Swal.fire({
+      title: "No file selected",
+      text: "Please choose a file to upload.",
+      icon: "error",
+    });
+  }
+};
+
+window.uploadFile = function (file, baseApiUrl) {
+  const currentPath = window.directoryStack[window.directoryStack.length - 1]
+    .replace(baseApiUrl, "")
+    .split("?")[0];
+  const repository = "d4if"; // Adjust this if needed
+  const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/uploadfile/${currentPath}`;
+  const token = window.getToken();
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("repository", repository);
+
+  fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      LOGIN: ` ${token}`,
+    },
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (
+        data.message === "File uploaded successfully" &&
+        data.status_code === 200
+      ) {
+        Swal.fire({
+          title: "Success!",
+          text: "File uploaded successfully",
+          icon: "success",
+        }).then(() => {
+          location.reload(); // Hard refresh
+        });
+      } else {
+        Swal.fire({
+          title: "Error!",
+          text: "File upload failed: " + data.message,
+          icon: "error",
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error uploading file:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "File upload failed. Please try again.",
+        icon: "error",
+      });
+    });
+};
+
 window.deleteFile = function (path) {
-  alert("Delete functionality not implemented."); // Placeholder for delete functionality
+  alert("Delete functionality not implemented.");
 };
