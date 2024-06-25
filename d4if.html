@@ -150,6 +150,26 @@
 .link-danger:hover {
   background: #c82333;
 }
+.upload-container {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.upload-input {
+  display: none;
+}
+
+.upload-btn, .upload-file-btn {
+  margin-left: 10px;
+}
+
+.file-name {
+  margin-left: 10px;
+  font-style: italic;
+  color: #555;
+}
+
   </style>
   <body class="iq-page-menu-horizontal">
     <!-- loader Start -->
@@ -558,6 +578,7 @@
     <!-- Frontend  -->
     <script type="module" src="./js/navbar/navbar.js"></script>
     <script type="module" src="./js/d4if/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Footer END -->
     <!-- Optional JavaScript -->
