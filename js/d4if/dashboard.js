@@ -52,18 +52,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if (showBackButton) {
       const backButton = document.createElement("li");
       backButton.innerHTML = `
-                    <div class="d-flex align-self-center iq-email-sender-info">
-                      <a href="javascript:void(0);" onclick="window.handleBackAction()" class="back-button">
-                        <i class="ri-arrow-left-line"></i> Back
-                      </a>
-                    </div>`;
+          <div class="d-flex align-self-center iq-email-sender-info">
+            <a href="javascript:void(0);" onclick="window.handleBackAction()" class="btn btn-primary back-button">
+              <i class="ri-arrow-left-line"></i> Back
+            </a>
+          </div>`;
       listContainer.appendChild(backButton);
     }
 
     // Append each directory or file to the list
     data.forEach((item) => {
-      const isImage =
-        item.type === "file" && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name);
       const itemElement = document.createElement("li");
       itemElement.className =
         "d-flex justify-content-between align-items-center";
@@ -83,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class="file-actions">
                       ${
                         item.type === "file" && item.download_url
-                          ? `<button class="btn btn-secondary download-btn" data-url="${item.download_url}" data-is-image="${isImage}">Download</button>`
+                          ? `<button class="btn btn-secondary download-btn" data-url="${item.download_url}" data-name="${item.name}">Download</button>`
                           : ""
                       }
                       <button class="btn btn-danger delete-btn" data-path="${
@@ -97,15 +95,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".download-btn").forEach((button) => {
       button.addEventListener("click", function () {
         const downloadUrl = this.getAttribute("data-url");
-        const isImage = this.getAttribute("data-is-image") === "true";
-        if (isImage) {
-          window.open(
-            "https://raw.githubusercontent.com/repoulbi/d4if/main/assets/images/logo.svg",
-            "_blank"
-          );
-        } else {
-          window.downloadFile(downloadUrl);
-        }
+        const fileName = this.getAttribute("data-name");
+        window.downloadFile(downloadUrl, fileName);
       });
     });
 
@@ -136,20 +127,28 @@ document.addEventListener("DOMContentLoaded", function () {
   window.fetchData(baseApiUrl);
 });
 
-window.downloadFile = function (downloadUrl) {
-  if (!downloadUrl) {
-    console.error("No download URL provided.");
-    alert("Download URL not available for this item.");
+window.downloadFile = function (downloadUrl, fileName) {
+  if (!downloadUrl || !fileName) {
+    console.error("No download URL or file name provided.");
+    alert("Download URL or file name not available for this item.");
     return;
   }
 
-  // Create a temporary link element and trigger the download
-  const link = document.createElement("a");
-  link.href = downloadUrl;
-  link.setAttribute("download", "");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  const imageExtensions = ["png", "jpg", "jpeg", "gif", "bmp", "svg"];
+  const fileExtension = fileName.split(".").pop().toLowerCase();
+
+  if (imageExtensions.includes(fileExtension)) {
+    // Redirect to the fetched URL for image files
+    window.open(downloadUrl, "_blank");
+  } else {
+    // Create a temporary link element and trigger the download for other file types
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 };
 
 window.deleteFile = function (path) {
