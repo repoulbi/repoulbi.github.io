@@ -52,11 +52,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (showBackButton) {
       const backButton = document.createElement("li");
       backButton.innerHTML = `
-          <div class="d-flex align-self-center iq-email-sender-info">
-            <a href="javascript:void(0);" onclick="window.handleBackAction()" class="back-button">
-              <i class="ri-arrow-left-line"></i> Back
-            </a>
-          </div>`;
+                <div class="d-flex align-self-center iq-email-sender-info">
+                  <a href="javascript:void(0);" onclick="window.handleBackAction()" class="back-button">
+                    <i class="ri-arrow-left-line"></i> Back
+                  </a>
+                </div>`;
       listContainer.appendChild(backButton);
     }
 
@@ -66,28 +66,32 @@ document.addEventListener("DOMContentLoaded", function () {
       itemElement.className =
         "d-flex justify-content-between align-items-center";
       itemElement.innerHTML = `
-          <div class="iq-email-sender-info">
-            <div class="iq-checkbox-mail">
-              <i class="mdi ${
-                item.type === "dir" ? "mdi-folder" : "mdi-file-document-outline"
-              }"></i>
-            </div>
-            <a href="javascript:void(0);" class="iq-email-title" onclick="window.handleItemClick('${
-              item.url
-            }', '${item.type}')">${item.name}</a>
-          </div>
-          <div class="file-actions">
-            ${
-              item.download_url
-                ? `<button class="btn btn-secondary" onclick="window.downloadFile('${item.download_url}')">Download</button>`
-                : ""
-            }
-            <button class="btn btn-danger" onclick="window.deleteFile('${
-              item.path
-            }')">Delete</button>
-          </div>`;
+                <div class="iq-email-sender-info">
+                  <div class="iq-checkbox-mail">
+                    <i class="mdi ${
+                      item.type === "dir"
+                        ? "mdi-folder"
+                        : "mdi-file-document-outline"
+                    }"></i>
+                  </div>
+                  <a href="javascript:void(0);" class="iq-email-title" onclick="window.handleItemClick('${
+                    item.url
+                  }', '${item.type}')">${item.name}</a>
+                </div>
+                <div class="file-actions">
+                  ${
+                    item.type === "file" && item.download_url
+                      ? `<a class="link-secondary download-link" href="javascript:void(0);" data-url="${item.download_url}" onclick="window.downloadFile('${item.download_url}')">Download</a>`
+                      : ""
+                  }
+                  <a href="javascript:void(0);" class="link-danger" onclick="window.deleteFile('${
+                    item.path
+                  }')">Delete</a>
+                </div>`;
       listContainer.appendChild(itemElement);
     });
+
+    // No need to add event listeners for download links as they are now directly bound by onclick
   }
 
   window.handleBackAction = function () {
@@ -110,17 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 window.downloadFile = function (downloadUrl) {
-  if (!downloadUrl) {
-    alert("Download URL not available for this item.");
-    return;
-  }
-  // Create an invisible anchor element to trigger the download
-  const anchor = document.createElement("a");
-  anchor.href = downloadUrl;
-  anchor.download = downloadUrl.split("/").pop(); // Use the file name from the URL
-  document.body.appendChild(anchor); // Append to the document
-  anchor.click(); // Trigger the download
-  document.body.removeChild(anchor); // Remove the anchor from the document
+  window.open(downloadUrl, "_blank");
 };
 
 window.deleteFile = function (path) {
