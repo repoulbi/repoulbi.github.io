@@ -10,9 +10,26 @@ document.addEventListener("DOMContentLoaded", function () {
     "src",
   ];
   window.directoryStack = [baseApiUrl]; // Starting with the base directory
+  window.getToken = function () {
+    const cookieMatch = document.cookie.match(new RegExp("(^| )login=([^;]+)"));
+    return cookieMatch ? cookieMatch[2] : null;
+  };
+  window.fetchData = function (url, searchParams = {}) {
+    // Construct the full URL with search parameters if any
+    const apiUrl = new URL(url);
+    Object.keys(searchParams).forEach((key) =>
+      apiUrl.searchParams.append(key, searchParams[key])
+    );
 
-  window.fetchData = function (url) {
-    fetch(url)
+    // Fetching the token from storage or cookie
+    const token = window.getToken();
+
+    fetch(apiUrl, {
+      headers: {
+        Accept: "application/json",
+        LOGIN: token, // Add token to the request headers
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error(
@@ -21,13 +38,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         return response.json();
       })
-      .then((data) => {
+      .then((json) => {
+        if (json.status_code !== 200) {
+          throw new Error("Failed to fetch: " + json.message);
+        }
+        const data = json.data;
+
         if (!Array.isArray(data)) {
           throw new TypeError("Expected an array of data");
         }
 
         // Determine if we are at the base level or navigating deeper
-        const isBaseFetch = url === baseApiUrl;
+        const isBaseFetch =
+          url === baseApiUrl && Object.keys(searchParams).length === 0;
 
         // If at the base, show only directories, otherwise show all items
         const itemsToShow = isBaseFetch
