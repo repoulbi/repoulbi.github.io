@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
         cancelButtonText: "No, cancel",
       }).then((result) => {
         if (result.isConfirmed) {
-          window.uploadFile(file, baseApiUrl);
+          window.uploadFile(file);
         }
       });
     } else {
@@ -153,12 +153,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  window.uploadFile = function (file, baseApiUrl) {
+  window.uploadFile = function (file) {
     const currentPath = window.directoryStack[window.directoryStack.length - 1]
       .replace(baseApiUrl, "")
       .split("?")[0];
-    const repository = "d4if"; // Adjust this if needed
-    const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/uploadfile/${currentPath}`;
+    const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/uploadfile/${encodeURIComponent(
+      currentPath
+    )}`;
     const token = getAuthToken();
     const formData = new FormData();
     formData.append("file", file);
@@ -168,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
       method: "POST",
       headers: {
         accept: "application/json",
-        LOGIN: ` ${token}`,
+        LOGIN: token,
       },
       body: formData,
     })
