@@ -133,10 +133,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (type === "dir") {
       window.fetchData(path);
     } else {
-      const downloadUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/download?repository=${repository}&path=${encodeURIComponent(
-        path
-      )}`;
-      window.downloadFile(downloadUrl, path.split("/").pop());
+      // Uncomment the line below if you need the download functionality
+      // const downloadUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/download?repository=${repository}&path=${encodeURIComponent(path)}`;
+      // window.downloadFile(downloadUrl, path.split("/").pop());
     }
   };
 
