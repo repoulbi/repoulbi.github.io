@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   // Initialize the directory stack with the base API URL
-  window.directoryStack = [buildApiUrl()];
+  window.directoryStack = [""];
 
   // Fetch data from the server
   window.fetchData = function (path = "") {
@@ -48,6 +48,9 @@ document.addEventListener("DOMContentLoaded", function () {
             )
           : data;
         displayDirectoryContents(itemsToShow, !isBaseFetch);
+        if (!isBaseFetch && !window.directoryStack.includes(path)) {
+          window.directoryStack.push(path); // Push the current path to the stack
+        }
       })
       .catch((error) => {
         console.error("Error fetching data: ", error);
@@ -81,6 +84,15 @@ document.addEventListener("DOMContentLoaded", function () {
                   </div>
               </div>`;
       listContainer.appendChild(backButton);
+
+      // Add event listener for file input
+      const uploadFileInput = document.getElementById("uploadFileInput");
+      uploadFileInput.addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        document.getElementById("fileName").textContent = file
+          ? file.name
+          : "No file chosen";
+      });
     }
 
     data.forEach((item) => {
@@ -108,9 +120,8 @@ document.addEventListener("DOMContentLoaded", function () {
   window.handleBackAction = function () {
     if (window.directoryStack.length > 1) {
       window.directoryStack.pop();
-      const previousPath = new URL(
-        window.directoryStack[window.directoryStack.length - 1]
-      ).searchParams.get("path");
+      const previousPath =
+        window.directoryStack[window.directoryStack.length - 1];
       window.fetchData(previousPath);
     } else {
       window.fetchData(); // Fetch from base if stack is empty
@@ -121,6 +132,36 @@ document.addEventListener("DOMContentLoaded", function () {
   window.handleItemClick = function (path, type) {
     if (type === "dir") {
       window.fetchData(path);
+    } else {
+      const downloadUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/download?repository=${repository}&path=${encodeURIComponent(
+        path
+      )}`;
+      window.downloadFile(downloadUrl, path.split("/").pop());
+    }
+  };
+
+  // Handle file downloads
+  window.downloadFile = function (downloadUrl, fileName) {
+    if (!downloadUrl || !fileName) {
+      console.error("No download URL or file name provided.");
+      alert("Download URL or file name not available for this item.");
+      return;
+    }
+
+    const imageExtensions = ["png", "jpg", "jpeg", "gif", "bmp", "svg"];
+    const fileExtension = fileName.split(".").pop().toLowerCase();
+
+    if (imageExtensions.includes(fileExtension)) {
+      // Redirect to the fetched URL for image files
+      window.open(downloadUrl, "_blank");
+    } else {
+      // Create a temporary link element and trigger the download for other file types
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   };
 
@@ -136,10 +177,12 @@ document.addEventListener("DOMContentLoaded", function () {
     formData.append("file", file);
 
     const currentPath =
-      new URL(
-        window.directoryStack[window.directoryStack.length - 1]
-      ).searchParams.get("path") || "";
-    const uploadUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/uploadfile/${currentPath}`;
+      window.directoryStack.length > 0
+        ? window.directoryStack[window.directoryStack.length - 1]
+        : "";
+    const uploadUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/uploadfile?repository=${repository}&path=${encodeURIComponent(
+      currentPath
+    )}`;
 
     fetch(uploadUrl, {
       method: "POST",
