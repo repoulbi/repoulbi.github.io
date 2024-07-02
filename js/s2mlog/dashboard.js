@@ -112,7 +112,9 @@ document.addEventListener("DOMContentLoaded", function () {
         ${
           item.type === "file"
             ? `<div class="file-actions">
-                          <button class="download-link" onclick="downloadFile('${item.download_url}')">Download</button>
+                          <button class="download-link" onclick="downloadFile('${item.download_url}', '${item.name}')">Download</button>
+                          <button class="copy-url-link" onclick="copyUrlToClipboard('${item.download_url}')">Copy URL</button>
+                          <button class="delete-link" onclick="deleteFile('${item.path}')">Delete</button>
                          </div>`
             : ""
         }`;
@@ -210,6 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       });
   };
+
   window.downloadFile = function (download_url, fileName) {
     if (!download_url) {
       console.error("No download URL provided.");
@@ -224,5 +227,86 @@ document.addEventListener("DOMContentLoaded", function () {
     link.click();
     document.body.removeChild(link);
   };
+
+  window.copyUrlToClipboard = function (url) {
+    if (!url) {
+      console.error("No URL provided.");
+      alert("URL not available for this item.");
+      return;
+    }
+
+    navigator.clipboard.writeText(url).then(
+      function () {
+        Swal.fire({
+          title: "Copied!",
+          text: "URL has been copied to clipboard.",
+          icon: "success",
+        });
+      },
+      function (err) {
+        console.error("Error copying URL: ", err);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to copy URL. Please try again.",
+          icon: "error",
+        });
+      }
+    );
+  };
+
+  window.deleteFile = function (path) {
+    const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/deletefile/${encodeURIComponent(
+      path
+    )}`;
+    const token = getAuthToken();
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to delete the file "${path}"`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(apiUrl, {
+          method: "DELETE",
+          headers: {
+            accept: "application/json",
+            LOGIN: token,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status_code === 200) {
+              Swal.fire({
+                title: "Deleted!",
+                text: "File has been deleted.",
+                icon: "success",
+              }).then(() => {
+                const currentPath =
+                  window.directoryStack[window.directoryStack.length - 1];
+                window.fetchData(currentPath); // Refresh the current directory
+              });
+            } else {
+              Swal.fire({
+                title: "Error!",
+                text: "File deletion failed: " + data.message,
+                icon: "error",
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error deleting file:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "File deletion failed. Please try again.",
+              icon: "error",
+            });
+          });
+      }
+    });
+  };
+
   window.fetchData(""); // Initial fetch
 });
