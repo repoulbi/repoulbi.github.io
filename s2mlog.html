@@ -124,17 +124,30 @@
    .file-actions {
   position: relative;
 }
+.download-link,
+      .copy-url-link,
+      .delete-link {
+        background: #007bff;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-right: 5px;
+      }
 
-.download-link {
-  position: relative;
-  z-index: 10;
-  background: #007bff;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  text-decoration: none;
-}
+      .copy-url-link {
+        background: #28a745;
+      }
 
+      .delete-link {
+        background: #dc3545;
+      }
+
+      .download-link:hover,
+      .copy-url-link:hover,
+      .delete-link:hover {
+        opacity: 0.8;
+      }
 .download-link:hover {
   background: #0056b3;
 }
