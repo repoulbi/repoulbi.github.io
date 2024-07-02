@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       });
   };
-  window.downloadFile = function (download_url) {
+  window.downloadFile = function (download_url, fileName) {
     if (!download_url) {
       console.error("No download URL provided.");
       alert("Download URL not available for this item.");
@@ -219,8 +219,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const link = document.createElement("a");
     link.href = download_url;
-    link.target = "_blank";
+    link.download = fileName;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   };
   window.fetchData(""); // Initial fetch
 });
