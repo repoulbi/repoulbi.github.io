@@ -210,21 +210,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       });
   };
-
-  window.downloadFile = function (downloadUrl, fileName) {
-    if (!downloadUrl || !fileName) {
-      console.error("No download URL or file name provided.");
-      alert("Download URL or file name not available for this item.");
+  window.downloadFile = function (download_url) {
+    if (!download_url) {
+      console.error("No download URL provided.");
+      alert("Download URL not available for this item.");
       return;
     }
 
     const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.setAttribute("download", fileName);
-    document.body.appendChild(link);
+    link.href = download_url;
+    link.target = "_blank";
     link.click();
-    document.body.removeChild(link);
   };
-
   window.fetchData(""); // Initial fetch
 });
