@@ -108,7 +108,14 @@ document.addEventListener("DOMContentLoaded", function () {
             <a href="javascript:void(0);" class="iq-email-title" onclick="window.handleItemClick('${
               item.path
             }', '${item.type}')">${item.name}</a>
-          </div>`;
+          </div>
+        ${
+          item.type === "file"
+            ? `<div class="file-actions">
+                          <button class="download-link" onclick="downloadFile('${item.download_url}')">Download</button>
+                         </div>`
+            : ""
+        }`;
       listContainer.appendChild(itemElement);
     });
   }
@@ -202,6 +209,21 @@ document.addEventListener("DOMContentLoaded", function () {
           icon: "error",
         });
       });
+  };
+
+  window.downloadFile = function (downloadUrl, fileName) {
+    if (!downloadUrl || !fileName) {
+      console.error("No download URL or file name provided.");
+      alert("Download URL or file name not available for this item.");
+      return;
+    }
+
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   window.fetchData(""); // Initial fetch
