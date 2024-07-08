@@ -112,9 +112,9 @@ document.addEventListener("DOMContentLoaded", function () {
         ${
           item.type === "file"
             ? `<div class="file-actions">
-              <button class="download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
-              <button class="copy-url-link" onclick="viewFile('${item.download_url}')">View</button>
-              <button class="delete-link" onclick="deleteFile('${item.path}')">Delete</button>
+              <button class="btn btn-primary download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
+              <button class="btn btn-success copy-url-link" onclick="viewFile('${item.download_url}')">View</button>
+              <button class="btn btn-danger delete-link" onclick="deleteFile('${item.path}')">Delete</button>
             </div>`
             : ""
         }`;
@@ -238,14 +238,17 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    const decodedUrl = decodeURIComponent(url);
+    const currentUrl = `${
+      window.location.origin
+    }/view.html?pdfUrl=${encodeURIComponent(url)}`;
 
-    navigator.clipboard.writeText(decodedUrl).then(
+    navigator.clipboard.writeText(currentUrl).then(
       function () {
         Swal.fire({
-          title: "Copied!",
+          title: "URL Copied!",
           text: "URL has been copied to clipboard.",
           icon: "success",
+          confirmButtonText: "OK",
         });
       },
       function (err) {
@@ -254,6 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
           title: "Error!",
           text: "Failed to copy URL. Please try again.",
           icon: "error",
+          confirmButtonText: "OK",
         });
       }
     );
