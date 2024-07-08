@@ -112,9 +112,8 @@ document.addEventListener("DOMContentLoaded", function () {
         ${
           item.type === "file"
             ? `<div class="file-actions">
-              <button class="view-pdf-link" onclick="viewPdf('${item.download_url}')">View PDF</button>              
               <button class="download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
-              <button class="copy-url-link" onclick="copyUrlToClipboard('${item.download_url}')">Copy URL</button>
+              <button class="copy-url-link" onclick="viewFile('${item.download_url}')">View</button>
               <button class="delete-link" onclick="deleteFile('${item.path}')">Delete</button>
             </div>`
             : ""
@@ -138,16 +137,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  window.viewPdf = function (url) {
-    if (!url) {
-      console.error("No URL provided.");
-      alert("URL not available for this item.");
-      return;
-    }
-
-    const decodedUrl = decodeURIComponent(url);
-    window.open(decodedUrl, "_blank");
-  };
   window.handleUploadClick = function () {
     const uploadFileInput = document.getElementById("uploadFileInput");
     const file = uploadFileInput.files[0];
@@ -223,6 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       });
   };
+
   window.downloadFile = function (download_url, fileName) {
     if (!download_url) {
       console.error("No download URL provided.");
@@ -321,6 +311,17 @@ document.addEventListener("DOMContentLoaded", function () {
           });
       }
     });
+  };
+
+  window.viewFile = function (url) {
+    if (!url) {
+      console.error("No URL provided.");
+      alert("View URL not available for this item.");
+      return;
+    }
+
+    const pdfUrl = encodeURIComponent(url);
+    window.open(`view.html?pdfUrl=${pdfUrl}`, "_blank");
   };
 
   window.fetchData(""); // Initial fetch

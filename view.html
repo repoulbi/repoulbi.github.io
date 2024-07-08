@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
+    <style>
+      #pdf-viewer {
+        width: 100%;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pdf-viewer"></div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const pdfUrl = urlParams.get("pdfUrl");
+
+        if (!pdfUrl) {
+          console.error("No PDF URL provided.");
+          alert("PDF URL not available.");
+          return;
+        }
+
+        const container = document.getElementById("pdf-viewer");
+
+        // Using PDF.js to fetch and render the PDF
+        const loadingTask = pdfjsLib.getDocument(decodeURIComponent(pdfUrl));
+        loadingTask.promise
+          .then(function (pdf) {
+            // Fetch the first page
+            pdf.getPage(1).then(function (page) {
+              const scale = 1.5;
+              const viewport = page.getViewport({ scale: scale });
+
+              // Prepare canvas using PDF page dimensions
+              const canvas = document.createElement("canvas");
+              const context = canvas.getContext("2d");
+              canvas.height = viewport.height;
+              canvas.width = viewport.width;
+
+              // Render PDF page into canvas context
+              const renderContext = {
+                canvasContext: context,
+                viewport: viewport,
+              };
+              page.render(renderContext).promise.then(function () {
+                container.innerHTML = ""; // Clear previous content
+                container.appendChild(canvas); // Append the canvas to the container
+              });
+            });
+          })
+          .catch(function (error) {
+            console.error("Error loading PDF: ", error);
+            alert(
+              "Failed to load PDF. Please check the console for more details."
+            );
+          });
+      });
+    </script>
+  </body>
+</html>
