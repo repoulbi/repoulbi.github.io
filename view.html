@@ -6,9 +6,22 @@
     <title>PDF Viewer</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
     <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;
+      }
       #pdf-viewer {
-        width: 100%;
-        height: 100vh;
+        width: 80%;
+        height: 90%;
+        border: 1px solid #ccc;
+        background-color: #fff;
         overflow: auto;
       }
       canvas {
