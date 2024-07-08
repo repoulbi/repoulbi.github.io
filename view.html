@@ -6,18 +6,58 @@
     <title>PDF Viewer</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
     <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #f0f0f0;
+      }
+      #toolbar {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+        background-color: #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      #toolbar button {
+        margin: 0 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+      #toolbar button:hover {
+        background-color: #0056b3;
+      }
       #pdf-viewer {
         width: 100%;
-        height: 100vh;
+        flex: 1;
         overflow: auto;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
       canvas {
         display: block;
-        margin: 0 auto;
+        margin: 10px auto;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
     </style>
   </head>
   <body>
+    <div id="toolbar">
+      <button id="download">Download</button>
+      <button id="copy-url">Copy URL</button>
+    </div>
     <div id="pdf-viewer"></div>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -34,8 +74,11 @@
 
         // Using PDF.js to fetch and render the PDF
         const loadingTask = pdfjsLib.getDocument(decodeURIComponent(pdfUrl));
+        let pdfDocument = null;
+
         loadingTask.promise
           .then(function (pdf) {
+            pdfDocument = pdf;
             for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
               pdf.getPage(pageNumber).then(function (page) {
                 const scale = 1.5;
@@ -64,7 +107,42 @@
               "Failed to load PDF. Please check the console for more details."
             );
           });
+
+        document
+          .getElementById("download")
+          .addEventListener("click", function () {
+            const link = document.createElement("a");
+            link.href = decodeURIComponent(pdfUrl);
+            link.download = "document.pdf";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          });
+
+        document
+          .getElementById("copy-url")
+          .addEventListener("click", function () {
+            const currentUrl = window.location.href;
+            navigator.clipboard.writeText(currentUrl).then(
+              function () {
+                Swal.fire({
+                  icon: "success",
+                  title: "Success",
+                  text: "URL telah berhasil di copy. Tekan OK",
+                });
+              },
+              function (err) {
+                console.error("Error copying URL: ", err);
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: "Failed to copy URL. Please check the console for more details.",
+                });
+              }
+            );
+          });
       });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </body>
 </html>
