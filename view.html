@@ -4,36 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PDF Viewer</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
-    <style>
-      body,
-      html {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #f0f0f0;
-      }
-      #pdf-viewer {
-        width: 80%;
-        height: 90%;
-        border: 1px solid #ccc;
-        background-color: #fff;
-        overflow: auto;
-      }
-      canvas {
-        display: block;
-        margin: 0 auto;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="pdf-viewer"></div>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
+    <script type="module">
+      import { PDFDocument } from "https://cdn.skypack.dev/pdf-lib";
+
+      document.addEventListener("DOMContentLoaded", async function () {
         const urlParams = new URLSearchParams(window.location.search);
         const pdfUrl = urlParams.get("pdfUrl");
 
@@ -43,41 +17,90 @@
           return;
         }
 
+        const arrayBuffer = await fetch(decodeURIComponent(pdfUrl)).then(
+          (res) => res.arrayBuffer()
+        );
+        const pdfDoc = await PDFDocument.load(arrayBuffer);
+        const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
+
         const container = document.getElementById("pdf-viewer");
 
-        // Using PDF.js to fetch and render the PDF
-        const loadingTask = pdfjsLib.getDocument(decodeURIComponent(pdfUrl));
-        loadingTask.promise
-          .then(function (pdf) {
-            for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
-              pdf.getPage(pageNumber).then(function (page) {
-                const scale = 1.5;
-                const viewport = page.getViewport({ scale: scale });
+        const iframe = document.createElement("iframe");
+        iframe.src = pdfDataUri;
+        iframe.width = "100%";
+        iframe.height = "100%";
+        iframe.style.border = "none";
 
-                // Prepare canvas using PDF page dimensions
-                const canvas = document.createElement("canvas");
-                const context = canvas.getContext("2d");
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
+        container.appendChild(iframe);
 
-                // Render PDF page into canvas context
-                const renderContext = {
-                  canvasContext: context,
-                  viewport: viewport,
-                };
-                page.render(renderContext).promise.then(function () {
-                  container.appendChild(canvas); // Append the canvas to the container
-                });
-              });
-            }
-          })
-          .catch(function (error) {
-            console.error("Error loading PDF: ", error);
-            alert(
-              "Failed to load PDF. Please check the console for more details."
-            );
+        document
+          .getElementById("download")
+          .addEventListener("click", function () {
+            const link = document.createElement("a");
+            link.href = pdfDataUri;
+            link.download = "document.pdf";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          });
+
+        document.getElementById("print").addEventListener("click", function () {
+          const printIframe = document.createElement("iframe");
+          printIframe.src = pdfDataUri;
+          printIframe.style.position = "fixed";
+          printIframe.style.width = "0";
+          printIframe.style.height = "0";
+          printIframe.style.border = "none";
+          document.body.appendChild(printIframe);
+          printIframe.contentWindow.focus();
+          printIframe.contentWindow.print();
+          document.body.removeChild(printIframe);
+        });
+
+        document
+          .getElementById("save-as")
+          .addEventListener("click", function () {
+            const link = document.createElement("a");
+            link.href = pdfDataUri;
+            link.download = "document.pdf";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
           });
       });
     </script>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #f0f0f0;
+      }
+      #toolbar {
+        width: 80%;
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0;
+      }
+      #pdf-viewer {
+        width: 80%;
+        height: calc(100% - 50px);
+        border: 1px solid #ccc;
+        background-color: #fff;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="toolbar">
+      <button id="download">Download</button>
+      <button id="print">Print</button>
+      <button id="save-as">Save As</button>
+    </div>
+    <div id="pdf-viewer"></div>
   </body>
 </html>
