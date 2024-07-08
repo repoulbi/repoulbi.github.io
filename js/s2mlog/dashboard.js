@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ${
           item.type === "file"
             ? `<div class="file-actions">
-              <button class="download-link" onclick="downloadFile('${item.download_url}', '${item.name}')">Download</button>
+              <button class="download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
               <button class="copy-url-link" onclick="copyUrlToClipboard('${item.download_url}')">Copy URL</button>
               <button class="delete-link" onclick="deleteFile('${item.path}')">Delete</button>
             </div>`
@@ -212,7 +212,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       });
   };
-
   window.downloadFile = function (download_url, fileName) {
     if (!download_url) {
       console.error("No download URL provided.");
@@ -221,10 +220,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const decodedUrl = decodeURIComponent(download_url);
+    const decodedFileName = decodeURIComponent(fileName);
 
     const link = document.createElement("a");
     link.href = decodedUrl;
-    link.download = fileName;
+    link.download = decodedFileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
