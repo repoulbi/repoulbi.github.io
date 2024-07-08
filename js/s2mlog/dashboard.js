@@ -112,6 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ${
           item.type === "file"
             ? `<div class="file-actions">
+              <button class="view-pdf-link" onclick="viewPdf('${item.download_url}')">View PDF</button>              
               <button class="download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
               <button class="copy-url-link" onclick="copyUrlToClipboard('${item.download_url}')">Copy URL</button>
               <button class="delete-link" onclick="deleteFile('${item.path}')">Delete</button>
@@ -137,6 +138,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  window.viewPdf = function (url) {
+    if (!url) {
+      console.error("No URL provided.");
+      alert("URL not available for this item.");
+      return;
+    }
+
+    const decodedUrl = decodeURIComponent(url);
+    window.open(decodedUrl, "_blank");
+  };
   window.handleUploadClick = function () {
     const uploadFileInput = document.getElementById("uploadFileInput");
     const file = uploadFileInput.files[0];
