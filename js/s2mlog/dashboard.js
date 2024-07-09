@@ -28,9 +28,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const itemsToShow = isBaseFetch
           ? data.filter(
               (item) =>
-                item.type === "dir" && !foldersToHide.includes(item.name)
+                item.type === "dir" &&
+                !foldersToHide.includes(item.name) &&
+                item.name !== "README.md"
             )
-          : data;
+          : data.filter((item) => item.name !== "README.md");
 
         if (!window.directoryStack.includes(path)) {
           window.directoryStack.push(path); // Add current path to the stack
@@ -76,9 +78,13 @@ document.addEventListener("DOMContentLoaded", function () {
           </a>
           <div class="upload-container">
             <input type="file" id="uploadFileInput" class="upload-input" />
+            <button class="btn btn-secondary create-folder-btn" onclick="window.handleCreateFolderClick()">Create Folder</button>
+
             <button class="btn btn-success upload-btn" onclick="document.getElementById('uploadFileInput').click();">Choose File</button>
             <span id="fileName" class="file-name">No file chosen</span>
             <button class="btn btn-info upload-file-btn" onclick="window.handleUploadClick()">Upload File</button>
+
+            
           </div>
         </div>`;
       listContainer.appendChild(backButton);
@@ -160,6 +166,88 @@ document.addEventListener("DOMContentLoaded", function () {
         icon: "error",
       });
     }
+  };
+
+  window.handleCreateFolderClick = function () {
+    Swal.fire({
+      title: "Create New Folder",
+      input: "text",
+      inputPlaceholder: "Enter folder name",
+      showCancelButton: true,
+      confirmButtonText: "Create",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        const folderName = result.value.trim();
+        if (!folderName) {
+          Swal.fire({
+            title: "Error!",
+            text: "Folder name cannot be empty.",
+            icon: "error",
+          });
+          return;
+        }
+
+        const currentPath = window.directoryStack[
+          window.directoryStack.length - 1
+        ]
+          .replace(baseApiUrl, "")
+          .split("?")[0];
+
+        // Tentukan path folder baru
+        const fullPath = currentPath
+          ? `${currentPath}/${folderName}`
+          : folderName;
+
+        const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/uploadfile/${encodeURIComponent(
+          fullPath
+        )}`;
+        const token = getAuthToken();
+
+        const formData = new FormData();
+        const readmeFile = new File(["# " + folderName], "README.md", {
+          type: "text/markdown",
+        });
+        formData.append("file", readmeFile);
+        formData.append("repository", repository);
+        formData.append("folder", fullPath); // Kirim path lengkap
+
+        fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            accept: "application/json",
+            LOGIN: token,
+          },
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status_code === 200) {
+              Swal.fire({
+                title: "Success!",
+                text: "Folder created successfully",
+                icon: "success",
+              }).then(() => {
+                window.fetchData(currentPath); // Refresh the current directory
+              });
+            } else {
+              Swal.fire({
+                title: "Error!",
+                text: "Failed to create folder: " + data.message,
+                icon: "error",
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error creating folder:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "Failed to create folder. Please try again.",
+              icon: "error",
+            });
+          });
+      }
+    });
   };
 
   window.uploadFile = function (file) {
