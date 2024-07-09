@@ -70,17 +70,17 @@ document.addEventListener("DOMContentLoaded", function () {
     if (showBackButton) {
       const backButton = document.createElement("li");
       backButton.innerHTML = `
-          <div class="d-flex align-self-center iq-email-sender-info">
-            <a href="javascript:void(0);" onclick="window.handleBackAction()" class="btn btn-primary back-button">
-              <i class="ri-arrow-left-line"></i> Back
-            </a>
-            <div class="upload-container">
-              <input type="file" id="uploadFileInput" class="upload-input" />
-              <button class="btn btn-success upload-btn" onclick="document.getElementById('uploadFileInput').click();">Choose File</button>
-              <span id="fileName" class="file-name">No file chosen</span>
-              <button class="btn btn-info upload-file-btn" onclick="window.handleUploadClick()">Upload File</button>
-            </div>
-          </div>`;
+        <div class="d-flex align-self-center iq-email-sender-info">
+          <a href="javascript:void(0);" onclick="window.handleBackAction()" class="btn btn-primary back-button">
+            <i class="ri-arrow-left-line"></i> Back
+          </a>
+          <div class="upload-container">
+            <input type="file" id="uploadFileInput" class="upload-input" />
+            <button class="btn btn-success upload-btn" onclick="document.getElementById('uploadFileInput').click();">Choose File</button>
+            <span id="fileName" class="file-name">No file chosen</span>
+            <button class="btn btn-info upload-file-btn" onclick="window.handleUploadClick()">Upload File</button>
+          </div>
+        </div>`;
       listContainer.appendChild(backButton);
 
       // Add event listener for file input
@@ -99,23 +99,23 @@ document.addEventListener("DOMContentLoaded", function () {
       itemElement.className =
         "d-flex justify-content-between align-items-center";
       itemElement.innerHTML = `
-          <div class="iq-email-sender-info">
-            <div class="iq-checkbox-mail">
-              <i class="mdi ${
-                item.type === "dir" ? "mdi-folder" : "mdi-file-document-outline"
-              }"></i>
-            </div>
-            <a href="javascript:void(0);" class="iq-email-title" onclick="window.handleItemClick('${
-              item.path
-            }', '${item.type}')">${item.name}</a>
+        <div class="iq-email-sender-info">
+          <div class="iq-checkbox-mail">
+            <i class="mdi ${
+              item.type === "dir" ? "mdi-folder" : "mdi-file-document-outline"
+            }"></i>
           </div>
+          <a href="javascript:void(0);" class="iq-email-title" onclick="window.handleItemClick('${
+            item.path
+          }', '${item.type}')">${item.name}</a>
+        </div>
         ${
           item.type === "file"
             ? `<div class="file-actions">
-                          <button class="download-link" onclick="downloadFile('${item.download_url}', '${item.name}')">Download</button>
-                          <button class="copy-url-link" onclick="copyUrlToClipboard('${item.download_url}')">Copy URL</button>
-                          <button class="delete-link" onclick="deleteFile('${item.path}')">Delete</button>
-                         </div>`
+              <button class="btn btn-primary download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
+              <button class="btn btn-success copy-url-link" onclick="viewFile('${item.download_url}')">View</button>
+              <button class="btn btn-danger delete-link" onclick="deleteFile('${item.path}')">Delete</button>
+            </div>`
             : ""
         }`;
       listContainer.appendChild(itemElement);
@@ -220,9 +220,12 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
+    const decodedUrl = decodeURIComponent(download_url);
+    const decodedFileName = decodeURIComponent(fileName);
+
     const link = document.createElement("a");
-    link.href = download_url;
-    link.download = fileName;
+    link.href = decodedUrl;
+    link.download = decodedFileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -235,12 +238,17 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    navigator.clipboard.writeText(url).then(
+    const currentUrl = `${
+      window.location.origin
+    }/view.html?pdfUrl=${encodeURIComponent(url)}`;
+
+    navigator.clipboard.writeText(currentUrl).then(
       function () {
         Swal.fire({
-          title: "Copied!",
+          title: "URL Copied!",
           text: "URL has been copied to clipboard.",
           icon: "success",
+          confirmButtonText: "OK",
         });
       },
       function (err) {
@@ -249,6 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
           title: "Error!",
           text: "Failed to copy URL. Please try again.",
           icon: "error",
+          confirmButtonText: "OK",
         });
       }
     );
@@ -306,6 +315,17 @@ document.addEventListener("DOMContentLoaded", function () {
           });
       }
     });
+  };
+
+  window.viewFile = function (url) {
+    if (!url) {
+      console.error("No URL provided.");
+      alert("View URL not available for this item.");
+      return;
+    }
+
+    const pdfUrl = encodeURIComponent(url);
+    window.open(`view.html?pdfUrl=${pdfUrl}`, "_blank");
   };
 
   window.fetchData(""); // Initial fetch
