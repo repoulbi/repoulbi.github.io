@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   window.deleteFile = function (path) {
-    const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/deletefile/${encodeURIComponent(
+    const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/deletefile?repository=${repository}&path=${encodeURIComponent(
       path
     )}`;
     const token = getAuthToken();
