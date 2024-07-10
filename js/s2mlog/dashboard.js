@@ -38,6 +38,18 @@ document.addEventListener("DOMContentLoaded", function () {
           window.directoryStack.push(path); // Add current path to the stack
         }
 
+        // Count folders and files
+        const folderCount = itemsToShow.filter(
+          (item) => item.type === "dir"
+        ).length;
+        const fileCount = itemsToShow.filter(
+          (item) => item.type === "file"
+        ).length;
+
+        // Update the HTML content with the counts
+        document.getElementById("totalFolderCount").textContent = folderCount;
+        document.getElementById("totalFileCount").textContent = fileCount;
+
         displayDirectoryContents(itemsToShow, !isBaseFetch); // Show back button if not at the base level
       })
       .catch((error) => {
