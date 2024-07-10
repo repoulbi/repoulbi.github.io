@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "metis-assets",
     "src",
   ];
+  const maxFileSizeMB = 5; // Maximum file size in MB
   window.directoryStack = [""]; // Starting with the base directory
 
   window.fetchData = function (path = "") {
@@ -159,6 +160,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const uploadFileInput = document.getElementById("uploadFileInput");
     const file = uploadFileInput.files[0];
     if (file) {
+      // Check file size
+      const fileSizeMB = file.size / (1024 * 1024);
+      if (fileSizeMB > maxFileSizeMB) {
+        Swal.fire({
+          title: "File Terlalu Besar",
+          text: `Ukuran File "${file.name}"Mencapai Jumlah Maksimum Size ${maxFileSizeMB} MB.`,
+          icon: "error",
+        });
+        return;
+      }
+
       Swal.fire({
         title: "Are you sure?",
         text: `You are about to upload the file "${file.name}"`,
