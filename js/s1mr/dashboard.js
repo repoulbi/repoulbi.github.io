@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const baseApiUrl = "https://repoulbi-be.ulbi.ac.id/repoulbi/contents";
-  const repository = "d3lb";
+  const repository = "s1mr";
   const foldersToHide = [
     ".vscode",
     "assets",
