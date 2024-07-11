@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const baseApiUrl = "https://api.github.com/repos/repoulbi/d4if/contents/";
+  const baseApiUrl = "https://repoulbi-be.ulbi.ac.id/repoulbi/contents";
+  const repository = "d4lb";
   const foldersToHide = [
     ".vscode",
     "assets",
@@ -9,37 +10,49 @@ document.addEventListener("DOMContentLoaded", function () {
     "metis-assets",
     "src",
   ];
-  window.directoryStack = [baseApiUrl]; // Starting with the base directory
+  const maxFileSizeMB = 5; // Maximum file size in MB
+  window.directoryStack = [""]; // Starting with the base directory
 
-  window.fetchData = function (url) {
-    fetch(url)
+  // Check and clear activities daily
+  clearDailyActivities();
+
+  window.fetchData = function (path = "") {
+    const url = buildApiUrl(path);
+    const token = getAuthToken();
+    fetch(url, {
+      headers: { LOGIN: token, "Content-Type": "application/json" },
+    })
+      .then((response) => response.json())
       .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            "Network response was not ok: " + response.statusText
-          );
+        if (response.status_code !== 200) {
+          throw new Error("Failed to fetch data: " + response.message);
         }
-        return response.json();
-      })
-      .then((data) => {
-        if (!Array.isArray(data)) {
-          throw new TypeError("Expected an array of data");
-        }
-
-        // Determine if we are at the base level or navigating deeper
-        const isBaseFetch = url === baseApiUrl;
-
-        // If at the base, show only directories, otherwise show all items
+        const data = response.data;
+        const isBaseFetch = path === "";
         const itemsToShow = isBaseFetch
           ? data.filter(
               (item) =>
-                item.type === "dir" && !foldersToHide.includes(item.name)
+                item.type === "dir" &&
+                !foldersToHide.includes(item.name) &&
+                item.name !== "README.md"
             )
-          : data;
+          : data.filter((item) => item.name !== "README.md");
 
-        if (!window.directoryStack.includes(url)) {
-          window.directoryStack.push(url); // Add current URL to the stack
+        if (!window.directoryStack.includes(path)) {
+          window.directoryStack.push(path); // Add current path to the stack
         }
+
+        // Count folders and files
+        const folderCount = itemsToShow.filter(
+          (item) => item.type === "dir"
+        ).length;
+        const fileCount = itemsToShow.filter(
+          (item) => item.type === "file"
+        ).length;
+
+        // Update the HTML content with the counts
+        document.getElementById("totalFolderCount").textContent = folderCount;
+        document.getElementById("totalFileCount").textContent = fileCount;
 
         displayDirectoryContents(itemsToShow, !isBaseFetch); // Show back button if not at the base level
       })
@@ -50,6 +63,17 @@ document.addEventListener("DOMContentLoaded", function () {
         );
       });
   };
+
+  function buildApiUrl(path = "") {
+    return `${baseApiUrl}?repository=${repository}${path ? "&path=" + encodeURIComponent(path) : ""}`;
+  }
+
+  function getAuthToken() {
+    const token =
+      localStorage.getItem("login") ||
+      (document.cookie.match(/(^|;)\s*login\s*=\s*([^;]+)/) || [])[2];
+    return token ? decodeURIComponent(token) : null;
+  }
 
   function displayDirectoryContents(data, showBackButton) {
     const listContainer = document.getElementById("directory-list");
@@ -70,9 +94,11 @@ document.addEventListener("DOMContentLoaded", function () {
             </a>
             <div class="upload-container">
               <input type="file" id="uploadFileInput" class="upload-input" />
+              <button class="btn btn-secondary create-folder-btn" onclick="window.handleCreateFolderClick()">Create Folder</button>
+  
               <button class="btn btn-success upload-btn" onclick="document.getElementById('uploadFileInput').click();">Choose File</button>
               <span id="fileName" class="file-name">No file chosen</span>
-              <button class="btn btn-info upload-file-btn" onclick="window.handleUploadClick('${baseApiUrl}')">Upload File</button>
+              <button class="btn btn-info upload-file-btn" onclick="window.handleUploadClick()">Upload File</button>
             </div>
           </div>`;
       listContainer.appendChild(backButton);
@@ -100,171 +126,396 @@ document.addEventListener("DOMContentLoaded", function () {
               }"></i>
             </div>
             <a href="javascript:void(0);" class="iq-email-title" onclick="window.handleItemClick('${
-              item.url
+              item.path
             }', '${item.type}')">${item.name}</a>
           </div>
-          <div class="file-actions">
-            ${
-              item.type === "file" && item.download_url
-                ? `<button class="btn btn-secondary download-btn" data-url="${item.download_url}" data-name="${item.name}">Download</button>`
-                : ""
-            }
-            <button class="btn btn-danger delete-btn" data-path="${
-              item.path
-            }">Delete</button>
-          </div>`;
+          ${
+            item.type === "file"
+              ? `<div class="file-actions">
+                <button class="btn btn-primary download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
+                <button class="btn btn-success copy-url-link" onclick="viewFile('${item.download_url}')">View</button>
+                <button class="btn btn-danger delete-link" onclick="deleteFile('${item.path}')">Delete</button>
+              </div>`
+              : ""
+          }`;
       listContainer.appendChild(itemElement);
     });
 
-    // Add event listeners for download and delete buttons
-    document.querySelectorAll(".download-btn").forEach((button) => {
-      button.addEventListener("click", function () {
-        const downloadUrl = this.getAttribute("data-url");
-        const fileName = this.getAttribute("data-name");
-        window.downloadFile(downloadUrl, fileName);
-      });
-    });
-
-    document.querySelectorAll(".delete-btn").forEach((button) => {
-      button.addEventListener("click", function () {
-        const filePath = this.getAttribute("data-path");
-        window.deleteFile(filePath);
-      });
-    });
+    // Display stored activities on initial load
+    displayStoredActivities();
   }
 
   window.handleBackAction = function () {
     if (window.directoryStack.length > 1) {
       window.directoryStack.pop(); // Remove current directory
-      const previousUrl =
+      const previousPath =
         window.directoryStack[window.directoryStack.length - 1];
-      window.fetchData(previousUrl); // Fetch previous directory
+      window.fetchData(previousPath); // Fetch previous directory
     }
   };
 
-  window.handleItemClick = function (url, type) {
+  window.handleItemClick = function (path, type) {
     if (type === "dir") {
-      window.fetchData(url); // Fetch the directory contents
+      window.fetchData(path); // Fetch the directory contents
     }
   };
 
-  // Fetch initial data from the base URL
-  window.fetchData(baseApiUrl);
-});
+  window.handleUploadClick = function () {
+    const uploadFileInput = document.getElementById("uploadFileInput");
+    const file = uploadFileInput.files[0];
+    if (file) {
+      // Check file size
+      const fileSizeMB = file.size / (1024 * 1024);
+      if (fileSizeMB > maxFileSizeMB) {
+        Swal.fire({
+          title: "File Terlalu Besar",
+          text: `Ukuran File "${file.name}"Mencapai Jumlah Maksimum Size ${maxFileSizeMB} MB.`,
+          icon: "error",
+        });
+        return;
+      }
 
-window.downloadFile = function (downloadUrl, fileName) {
-  if (!downloadUrl || !fileName) {
-    console.error("No download URL or file name provided.");
-    alert("Download URL or file name not available for this item.");
-    return;
-  }
+      Swal.fire({
+        title: "Are you sure?",
+        text: `You are about to upload the file "${file.name}"`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, upload it!",
+        cancelButtonText: "No, cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.uploadFile(file);
+        }
+      });
+    } else {
+      Swal.fire({
+        title: "No file selected",
+        text: "Please choose a file to upload.",
+        icon: "error",
+      });
+    }
+  };
 
-  const imageExtensions = ["png", "jpg", "jpeg", "gif", "bmp", "svg"];
-  const fileExtension = fileName.split(".").pop().toLowerCase();
+  window.handleCreateFolderClick = function () {
+    Swal.fire({
+      title: "Create New Folder",
+      input: "text",
+      inputPlaceholder: "Enter folder name",
+      showCancelButton: true,
+      confirmButtonText: "Create",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        const folderName = result.value.trim();
+        if (!folderName) {
+          Swal.fire({
+            title: "Error!",
+            text: "Folder name cannot be empty.",
+            icon: "error",
+          });
+          return;
+        }
 
-  if (imageExtensions.includes(fileExtension)) {
-    // Redirect to the fetched URL for image files
-    window.open(downloadUrl, "_blank");
-  } else {
-    // Create a temporary link element and trigger the download for other file types
+        const currentPath = window.directoryStack[
+          window.directoryStack.length - 1
+        ]
+          .replace(baseApiUrl, "")
+          .split("?")[0];
+
+        // Tentukan path folder baru
+        const fullPath = currentPath
+          ? `${currentPath}/${folderName}`
+          : folderName;
+
+        const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/uploadfile/${encodeURIComponent(
+          fullPath
+        )}`;
+        const token = getAuthToken();
+
+        const formData = new FormData();
+        const readmeFile = new File(["# " + folderName], "README.md", {
+          type: "text/markdown",
+        });
+        formData.append("file", readmeFile);
+        formData.append("repository", repository);
+        formData.append("folder", fullPath); // Kirim path lengkap
+
+        fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            accept: "application/json",
+            LOGIN: token,
+          },
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status_code === 200) {
+              Swal.fire({
+                title: "Success!",
+                text: "Folder created successfully",
+                icon: "success",
+              }).then(() => {
+                window.fetchData(currentPath); // Refresh the current directory
+                updateTimeline("createFolder", folderName, currentPath);
+              });
+            } else {
+              Swal.fire({
+                title: "Error!",
+                text: "Failed to create folder: " + data.message,
+                icon: "error",
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error creating folder:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "Failed to create folder. Please try again.",
+              icon: "error",
+            });
+          });
+      }
+    });
+  };
+
+  window.uploadFile = function (file) {
+    const currentPath = window.directoryStack[window.directoryStack.length - 1]
+      .replace(baseApiUrl, "")
+      .split("?")[0];
+    const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/uploadfile/${encodeURIComponent(
+      currentPath
+    )}`;
+    const token = getAuthToken();
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("repository", repository);
+
+    fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        LOGIN: token,
+      },
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (
+          data.message === "File uploaded successfully" &&
+          data.status_code === 200
+        ) {
+          Swal.fire({
+            title: "Success!",
+            text: "File uploaded successfully",
+            icon: "success",
+          }).then(() => {
+            window.fetchData(currentPath); // Refresh the current directory
+            updateTimeline("upload", file.name, currentPath);
+          });
+        } else {
+          Swal.fire({
+            title: "Error!",
+            text: "File upload failed: " + data.message,
+            icon: "error",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error uploading file:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "File upload failed. Please try again.",
+          icon: "error",
+        });
+      });
+  };
+
+  window.downloadFile = function (download_url, fileName) {
+    if (!download_url) {
+      console.error("No download URL provided.");
+      alert("Download URL not available for this item.");
+      return;
+    }
+
+    const decodedUrl = decodeURIComponent(download_url);
+    const decodedFileName = decodeURIComponent(fileName);
+
     const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.setAttribute("download", fileName);
+    link.href = decodedUrl;
+    link.download = decodedFileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }
-};
+  };
 
-window.getToken = function () {
-  const tokenFromLocalStorage = localStorage.getItem("login");
-  if (tokenFromLocalStorage) {
-    return tokenFromLocalStorage;
-  }
+  window.copyUrlToClipboard = function (url) {
+    if (!url) {
+      console.error("No URL provided.");
+      alert("URL not available for this item.");
+      return;
+    }
 
-  const cookieMatch = document.cookie.match(new RegExp("(^| )login=([^;]+)"));
-  if (cookieMatch) {
-    return cookieMatch[2];
-  }
+    const currentUrl = `${
+      window.location.origin
+    }/view.html?pdfUrl=${encodeURIComponent(url)}`;
 
-  return null;
-};
+    navigator.clipboard.writeText(currentUrl).then(
+      function () {
+        Swal.fire({
+          title: "URL Copied!",
+          text: "URL has been copied to clipboard.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      },
+      function (err) {
+        console.error("Error copying URL: ", err);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to copy URL. Please try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    );
+  };
 
-window.handleUploadClick = function (baseApiUrl) {
-  const uploadFileInput = document.getElementById("uploadFileInput");
-  const file = uploadFileInput.files[0];
-  if (file) {
+  window.deleteFile = function (path) {
+    const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/deletefile?repository=${repository}&path=${encodeURIComponent(
+      path
+    )}`;
+    const token = getAuthToken();
+
     Swal.fire({
       title: "Are you sure?",
-      text: `You are about to upload the file "${file.name}"`,
+      text: `You are about to delete the file "${path}"`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, upload it!",
+      confirmButtonText: "Yes, delete it!",
       cancelButtonText: "No, cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        window.uploadFile(file, baseApiUrl);
+        fetch(apiUrl, {
+          method: "DELETE",
+          headers: {
+            accept: "application/json",
+            LOGIN: token,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status_code === 200) {
+              Swal.fire({
+                title: "Deleted!",
+                text: "File has been deleted.",
+                icon: "success",
+              }).then(() => {
+                const currentPath =
+                  window.directoryStack[window.directoryStack.length - 1];
+                window.fetchData(currentPath); // Refresh the current directory
+                updateTimeline("delete", path.split("/").pop(), currentPath);
+              });
+            } else {
+              Swal.fire({
+                title: "Error!",
+                text: "File deletion failed: " + data.message,
+                icon: "error",
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error deleting file:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "File deletion failed. Please try again.",
+              icon: "error",
+            });
+          });
       }
     });
-  } else {
-    Swal.fire({
-      title: "No file selected",
-      text: "Please choose a file to upload.",
-      icon: "error",
+  };
+
+  window.viewFile = function (url) {
+    if (!url) {
+      console.error("No URL provided.");
+      alert("View URL not available for this item.");
+      return;
+    }
+
+    const pdfUrl = encodeURIComponent(url);
+    window.open(`view.html?pdfUrl=${pdfUrl}`, "_blank");
+  };
+
+  window.fetchData(""); // Initial fetch
+
+  function updateTimeline(action, itemName, path) {
+    const timelineContainer = document.querySelector(".iq-timeline");
+    const currentDateTime = new Date().toLocaleString();
+
+    let actionText = "";
+    let borderColorClass = "";
+    if (action === "upload") {
+      actionText = `Uploaded file "${itemName}"`;
+      borderColorClass = "border-success";
+    } else if (action === "createFolder") {
+      actionText = `Created folder "${itemName}"`;
+      borderColorClass = "border-primary";
+    } else if (action === "delete") {
+      actionText = `Deleted file "${itemName}"`;
+      borderColorClass = "border-danger";
+    }
+
+    const activity = {
+      path,
+      currentDateTime,
+      actionText,
+      borderColorClass,
+    };
+
+    saveActivityToLocalStorage(activity);
+
+    displayStoredActivities();
+  }
+
+  function saveActivityToLocalStorage(activity) {
+    const activities = JSON.parse(localStorage.getItem("activities")) || [];
+    activities.push(activity);
+    // Keep only the 5 most recent activities
+    if (activities.length > 5) {
+      activities.shift();
+    }
+    localStorage.setItem("activities", JSON.stringify(activities));
+  }
+
+  function displayStoredActivities() {
+    const activities = JSON.parse(localStorage.getItem("activities")) || [];
+    const timelineContainer = document.querySelector(".iq-timeline");
+    timelineContainer.innerHTML = ""; // Clear the timeline
+
+    // Reverse the activities to show the most recent first
+    activities.reverse().forEach((activity) => {
+      const newTimelineItem = `
+          <li>
+            <div class="timeline-dots ${activity.borderColorClass}"></div>
+            <h6 class="float-left mb-1">${activity.path}</h6>
+            <small class="float-right mt-1">${activity.currentDateTime}</small>
+            <div class="d-inline-block w-100">
+              <p>${activity.actionText}</p>
+            </div>
+          </li>
+        `;
+      timelineContainer.innerHTML += newTimelineItem;
     });
   }
-};
 
-window.uploadFile = function (file, baseApiUrl) {
-  const currentPath = window.directoryStack[window.directoryStack.length - 1]
-    .replace(baseApiUrl, "")
-    .split("?")[0];
-  const repository = "d4if"; // Adjust this if needed
-  const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/uploadfile/${currentPath}`;
-  const token = window.getToken();
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("repository", repository);
+  function clearDailyActivities() {
+    const lastClearDate = localStorage.getItem("lastClearDate");
+    const today = new Date().toLocaleDateString();
 
-  fetch(apiUrl, {
-    method: "POST",
-    headers: {
-      accept: "application/json",
-      LOGIN: ` ${token}`,
-    },
-    body: formData,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (
-        data.message === "File uploaded successfully" &&
-        data.status_code === 200
-      ) {
-        Swal.fire({
-          title: "Success!",
-          text: "File uploaded successfully",
-          icon: "success",
-        }).then(() => {
-          location.reload(); // Hard refresh
-        });
-      } else {
-        Swal.fire({
-          title: "Error!",
-          text: "File upload failed: " + data.message,
-          icon: "error",
-        });
-      }
-    })
-    .catch((error) => {
-      console.error("Error uploading file:", error);
-      Swal.fire({
-        title: "Error!",
-        text: "File upload failed. Please try again.",
-        icon: "error",
-      });
-    });
-};
-
-window.deleteFile = function (path) {
-  alert("Delete functionality not implemented.");
-};
+    if (lastClearDate !== today) {
+      localStorage.removeItem("activities");
+      localStorage.setItem("lastClearDate", today);
+    }
+  }
+});
