@@ -10,7 +10,11 @@ document.addEventListener("DOMContentLoaded", function () {
     "metis-assets",
     "src",
   ];
+  const maxFileSizeMB = 5; // Maximum file size in MB
   window.directoryStack = [""]; // Starting with the base directory
+
+  // Check and clear activities daily
+  clearDailyActivities();
 
   window.fetchData = function (path = "") {
     const url = buildApiUrl(path);
@@ -37,6 +41,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!window.directoryStack.includes(path)) {
           window.directoryStack.push(path); // Add current path to the stack
         }
+
+        // Count folders and files
+        const folderCount = itemsToShow.filter(
+          (item) => item.type === "dir"
+        ).length;
+        const fileCount = itemsToShow.filter(
+          (item) => item.type === "file"
+        ).length;
+
+        // Update the HTML content with the counts
+        document.getElementById("totalFolderCount").textContent = folderCount;
+        document.getElementById("totalFileCount").textContent = fileCount;
 
         displayDirectoryContents(itemsToShow, !isBaseFetch); // Show back button if not at the base level
       })
@@ -83,8 +99,6 @@ document.addEventListener("DOMContentLoaded", function () {
             <button class="btn btn-success upload-btn" onclick="document.getElementById('uploadFileInput').click();">Choose File</button>
             <span id="fileName" class="file-name">No file chosen</span>
             <button class="btn btn-info upload-file-btn" onclick="window.handleUploadClick()">Upload File</button>
-
-            
           </div>
         </div>`;
       listContainer.appendChild(backButton);
@@ -126,6 +140,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }`;
       listContainer.appendChild(itemElement);
     });
+
+    // Display stored activities on initial load
+    displayStoredActivities();
   }
 
   window.handleBackAction = function () {
@@ -147,6 +164,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const uploadFileInput = document.getElementById("uploadFileInput");
     const file = uploadFileInput.files[0];
     if (file) {
+      // Check file size
+      const fileSizeMB = file.size / (1024 * 1024);
+      if (fileSizeMB > maxFileSizeMB) {
+        Swal.fire({
+          title: "File Terlalu Besar",
+          text: `Ukuran File "${file.name}"Mencapai Jumlah Maksimum Size ${maxFileSizeMB} MB.`,
+          icon: "error",
+        });
+        return;
+      }
+
       Swal.fire({
         title: "Are you sure?",
         text: `You are about to upload the file "${file.name}"`,
@@ -229,6 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 icon: "success",
               }).then(() => {
                 window.fetchData(currentPath); // Refresh the current directory
+                updateTimeline("createFolder", folderName, currentPath);
               });
             } else {
               Swal.fire({
@@ -282,6 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
             icon: "success",
           }).then(() => {
             window.fetchData(currentPath); // Refresh the current directory
+            updateTimeline("upload", file.name, currentPath);
           });
         } else {
           Swal.fire({
@@ -384,6 +414,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const currentPath =
                   window.directoryStack[window.directoryStack.length - 1];
                 window.fetchData(currentPath); // Refresh the current directory
+                updateTimeline("delete", path.split("/").pop(), currentPath);
               });
             } else {
               Swal.fire({
@@ -417,4 +448,74 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   window.fetchData(""); // Initial fetch
+
+  function updateTimeline(action, itemName, path) {
+    const timelineContainer = document.querySelector(".iq-timeline");
+    const currentDateTime = new Date().toLocaleString();
+
+    let actionText = "";
+    let borderColorClass = "";
+    if (action === "upload") {
+      actionText = `Uploaded file "${itemName}"`;
+      borderColorClass = "border-success";
+    } else if (action === "createFolder") {
+      actionText = `Created folder "${itemName}"`;
+      borderColorClass = "border-primary";
+    } else if (action === "delete") {
+      actionText = `Deleted file "${itemName}"`;
+      borderColorClass = "border-danger";
+    }
+
+    const activity = {
+      path,
+      currentDateTime,
+      actionText,
+      borderColorClass,
+    };
+
+    saveActivityToLocalStorage(activity);
+
+    displayStoredActivities();
+  }
+
+  function saveActivityToLocalStorage(activity) {
+    const activities = JSON.parse(localStorage.getItem("activities")) || [];
+    activities.push(activity);
+    // Keep only the 5 most recent activities
+    if (activities.length > 5) {
+      activities.shift();
+    }
+    localStorage.setItem("activities", JSON.stringify(activities));
+  }
+
+  function displayStoredActivities() {
+    const activities = JSON.parse(localStorage.getItem("activities")) || [];
+    const timelineContainer = document.querySelector(".iq-timeline");
+    timelineContainer.innerHTML = ""; // Clear the timeline
+
+    // Reverse the activities to show the most recent first
+    activities.reverse().forEach((activity) => {
+      const newTimelineItem = `
+        <li>
+          <div class="timeline-dots ${activity.borderColorClass}"></div>
+          <h6 class="float-left mb-1">${activity.path}</h6>
+          <small class="float-right mt-1">${activity.currentDateTime}</small>
+          <div class="d-inline-block w-100">
+            <p>${activity.actionText}</p>
+          </div>
+        </li>
+      `;
+      timelineContainer.innerHTML += newTimelineItem;
+    });
+  }
+
+  function clearDailyActivities() {
+    const lastClearDate = localStorage.getItem("lastClearDate");
+    const today = new Date().toLocaleDateString();
+
+    if (lastClearDate !== today) {
+      localStorage.removeItem("activities");
+      localStorage.setItem("lastClearDate", today);
+    }
+  }
 });
