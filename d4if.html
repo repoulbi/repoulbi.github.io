@@ -1,554 +1,500 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <title>Repositori ULBI - Selamat Datang Di Aplikasi Repository Ulbi</title>
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="images/favicon.ico" />
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <!-- Typography CSS -->
-    <link rel="stylesheet" href="css/typography.css" />
-    <!-- Style CSS -->
-    <link rel="stylesheet" href="css/style.css" />
-    <!-- Responsive CSS -->
-    <link rel="stylesheet" href="css/responsive.css" />
-    <!-- Full calendar -->
-    <!-- <link href="fullcalendar/core/main.css" rel="stylesheet" />
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Repositori ULBI - Selamat Datang Di Aplikasi Repository Ulbi</title>
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="images/favicon.ico" />
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <!-- Typography CSS -->
+  <link rel="stylesheet" href="css/typography.css" />
+  <!-- Style CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Responsive CSS -->
+  <link rel="stylesheet" href="css/responsive.css" />
+  <!-- Full calendar -->
+  <!-- <link href="fullcalendar/core/main.css" rel="stylesheet" />
     <link href="fullcalendar/daygrid/main.css" rel="stylesheet" />
     <link href="fullcalendar/timegrid/main.css" rel="stylesheet" />
     <link href="fullcalendar/list/main.css" rel="stylesheet" /> -->
-    <link href="https://cdn.materialdesignicons.com/6.4.95/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.materialdesignicons.com/6.4.95/css/materialdesignicons.min.css" rel="stylesheet">
 
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-    />
-  </head>
-  <style>
-   .folder-contents {
-    padding-left: 20px; /* Indent contents to show nesting */
-   }
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+</head>
+<style>
+  .folder-contents {
+    padding-left: 20px;
+    /* Indent contents to show nesting */
+  }
 
-   .file-entry {
-      cursor: pointer;
-      padding: 10px;
-      background-color: #f0f0f0;
-      border-radius: 5px;
-      margin: 5px 0;
-      transition: background-color 0.3s;
-   }
+  .file-entry {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin: 5px 0;
+    transition: background-color 0.3s;
+  }
 
-   .file-entry:hover {
-      background-color: #e0e0e0;
-   }
+  .file-entry:hover {
+    background-color: #e0e0e0;
+  }
 
-   .folder {
-      background-color: #eef1f7;
-   }
+  .folder {
+    background-color: #eef1f7;
+  }
 
-   .folder:hover {
-      background-color: #dde1e7;
-   }
+  .folder:hover {
+    background-color: #dde1e7;
+  }
 
-   h3 {
-      color: #333; /* Dark color for header text */
-      margin-bottom: 2%; /* Space between header and file entries */
-   }
-      .file-list-container {
-         height: 100%; /* Set a fixed height according to your design needs */
-         overflow-y: auto; /* Enables vertical scrolling */
-         border: 1px solid #ffffff; /* Optional: adds a border around the scrollable area */
-         padding: 10px; /* Optional: adds some spacing inside the container */
-         margin: 10px 0; /* Optional: adds some margin outside the container */
-         background-color: #fff; /* Optional: sets a background color */
-         box-shadow: 0 2px 6px rgba(133, 80, 80, 0.1); /* Optional: adds a subtle shadow for depth */
-      }
+  h3 {
+    color: #333;
+    /* Dark color for header text */
+    margin-bottom: 2%;
+    /* Space between header and file entries */
+  }
+
+  .file-list-container {
+    height: 100%;
+    /* Set a fixed height according to your design needs */
+    overflow-y: auto;
+    /* Enables vertical scrolling */
+    border: 1px solid #ffffff;
+    /* Optional: adds a border around the scrollable area */
+    padding: 10px;
+    /* Optional: adds some spacing inside the container */
+    margin: 10px 0;
+    /* Optional: adds some margin outside the container */
+    background-color: #fff;
+    /* Optional: sets a background color */
+    box-shadow: 0 2px 6px rgba(133, 80, 80, 0.1);
+    /* Optional: adds a subtle shadow for depth */
+  }
 
 
-      .file-entry:hover {
-         background-color: #ececec; /* Changes background on hover */
-      }
+  .file-entry:hover {
+    background-color: #ececec;
+    /* Changes background on hover */
+  }
 
-   .file-entry {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start; /* Align items to the left */
-      margin: 10px;
-      padding: 10px;
-      width: auto; /* Adjust width as per content */
-      background-color: #ffffff; /* Clean white background */
-      border: 1px solid #e0e0e0; /* Subtle border */
-      border-radius: 8px; /* Rounded corners for modern look */
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.1); /* Soft shadow for depth */
-      transition: all 0.3s ease; /* Smooth transition for hover effects */
-   }
+  .file-entry {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* Align items to the left */
+    margin: 10px;
+    padding: 10px;
+    width: auto;
+    /* Adjust width as per content */
+    background-color: #ffffff;
+    /* Clean white background */
+    border: 1px solid #e0e0e0;
+    /* Subtle border */
+    border-radius: 8px;
+    /* Rounded corners for modern look */
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+    /* Soft shadow for depth */
+    transition: all 0.3s ease;
+    /* Smooth transition for hover effects */
+  }
 
-   .file-entry {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px;
-      margin-bottom: 5px;
-      background-color: #f9f9f9;
-      border-radius: 4px;
-      transition: background-color 0.3s;
-   }
+  .file-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
 
-   .file-name {
-      flex-grow: 1; /* Ensures the name takes up available space */
-      margin-left: 10px; /* Space between icon and text */
-   }
+  .file-name {
+    flex-grow: 1;
+    /* Ensures the name takes up available space */
+    margin-left: 10px;
+    /* Space between icon and text */
+  }
 
-   .file-actions i {
-      margin-left: 10px; /* Space between icons */
-      cursor: pointer; /* Indicates clickable */
-      color: #666; /* Default icon color */
-   }
+  .file-actions i {
+    margin-left: 10px;
+    /* Space between icons */
+    cursor: pointer;
+    /* Indicates clickable */
+    color: #666;
+    /* Default icon color */
+  }
 
-   .file-actions i:hover {
-      color: #312121; /* Darker color on hover for better visibility */
-   }
+  .file-actions i:hover {
+    color: #312121;
+    /* Darker color on hover for better visibility */
+  }
 
-   .mdi {
-      font-size: 24px; /* Icon size */
-      color: #5f6368; /* Icon color, dark grey */
-      margin-right: 10px; /* Space between icon and text */
-   }
+  .mdi {
+    font-size: 24px;
+    /* Icon size */
+    color: #5f6368;
+    /* Icon color, dark grey */
+    margin-right: 10px;
+    /* Space between icon and text */
+  }
 
-   .file-actions {
-  position: relative;
-}
+  .file-actions {
+    position: relative;
+  }
 
-.download-link {
-  position: relative;
-  z-index: 10;
-  background: #007bff;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  text-decoration: none;
-}
+  .download-link,
+  .copy-url-link,
+  .delete-link {
+    background: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-right: 5px;
+  }
 
-.download-link:hover {
-  background: #0056b3;
-}
+  .copy-url-link {
+    background: #28a745;
+  }
 
-.link-danger {
-  background: #dc3545;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  text-decoration: none;
-}
+  .delete-link {
+    background: #dc3545;
+  }
 
-.link-danger:hover {
-  background: #c82333;
-}
-.upload-container {
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
-}
+  .download-link:hover,
+  .copy-url-link:hover,
+  .delete-link:hover {
+    opacity: 0.8;
+  }
 
-.upload-input {
-  display: none;
-}
+  .download-link:hover {
+    background: #0056b3;
+  }
 
-.upload-btn, .upload-file-btn {
-  margin-left: 10px;
-}
+  .link-danger {
+    background: #dc3545;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+  }
 
-.file-name {
-  margin-left: 10px;
-  font-style: italic;
-  color: #555;
-}
+  .link-danger:hover {
+    background: #c82333;
+  }
 
-  </style>
-  <body class="iq-page-menu-horizontal">
-    <!-- loader Start -->
-    <div id="loading">
-      <div id="loading-center"></div>
-    </div>
-    <!-- loader END -->
-    <!-- Wrapper Start -->
-    <div class="wrapper">
-      <!-- Sidebar  -->
-      <!-- TOP Nav Bar -->
-      <div class="iq-top-navbar">
-        <div
-          class="iq-navbar-custom d-flex align-items-center justify-content-between"
-        >
-          <div class="iq-sidebar-logo">
-            <div class="top-logo">
-              <a href="index.html" class="logo">
-                <img src="./assets/images/LOGO.png" class="img-fluid" alt="" />
-                <br />
-              </a>
-            </div>
+  .upload-container {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+  }
+
+  .upload-input {
+    display: none;
+  }
+
+  .upload-btn,
+  .upload-file-btn {
+    margin-left: 10px;
+  }
+
+  .file-name {
+    margin-left: 10px;
+    font-style: italic;
+    color: #555;
+  }
+</style>
+
+<body class="iq-page-menu-horizontal">
+  <!-- loader Start -->
+  <div id="loading">
+    <div id="loading-center"></div>
+  </div>
+  <!-- loader END -->
+  <!-- Wrapper Start -->
+  <div class="wrapper">
+    <!-- Sidebar  -->
+    <!-- TOP Nav Bar -->
+    <div class="iq-top-navbar">
+      <div class="iq-navbar-custom d-flex align-items-center justify-content-between">
+        <div class="iq-sidebar-logo">
+          <div class="top-logo">
+            <a href="index.html" class="logo">
+              <img src="./assets/images/LOGO.png" class="img-fluid" alt="" />
+              <br />
+            </a>
           </div>
-          <div class="iq-menu-horizontal">
-            <nav class="iq-sidebar-menu">
-              <ul id="iq-sidebar-toggle" class="iq-menu d-flex"></ul>
-            </nav>
-          </div>
-          <nav class="navbar navbar-expand-lg navbar-light p-0">
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <i class="ri-menu-3-line"></i>
-            </button>
-            <div class="iq-menu-bt align-self-center">
-              <div class="wrapper-menu">
-                <div class="main-circle">
-                  <i class="ri-arrow-left-s-line"></i>
-                </div>
-                <div class="hover-circle">
-                  <i class="ri-arrow-right-s-line"></i>
-                </div>
-              </div>
-            </div>
-
-            <ul class="navbar-list">
-              <li>
-                <a
-                  href="#"
-                  class="search-toggle iq-waves-effect d-flex align-items-center"
-                >
-                  <img
-                    src="images/user/1.jpg"
-                    class="img-fluid rounded mr-3"
-                    alt="user"
-                  />
-                </a>
-                <div class="iq-sub-dropdown iq-user-dropdown">
-                  <div class="iq-card shadow-none m-0">
-                    <div class="iq-card-body p-0">
-                      <div class="bg-primary p-3">
-                        <h5 class="mb-0 text-white line-height">
-                          Hello Nik jone
-                        </h5>
-                        <span class="text-white font-size-12">email</span>
-                      </div>
-                      <a
-                        href="profile.html"
-                        class="iq-sub-card iq-bg-primary-hover"
-                      >
-                        <div class="media align-items-center">
-                          <div class="rounded iq-card-icon iq-bg-primary">
-                            <i class="ri-file-user-line"></i>
-                          </div>
-                          <div class="media-body ml-3">
-                            <h6 class="mb-0">My Profile</h6>
-                            <p class="mb-0 font-size-12">
-                              View personal profile details.
-                            </p>
-                          </div>
-                        </div>
-                      </a>
-
-                      <div class="d-inline-block w-100 text-center p-3">
-                        <a
-                          class="bg-primary iq-sign-btn"
-                          href="sign-in.html"
-                          role="button"
-                          >Sign out<i class="ri-login-box-line ml-2"></i
-                        ></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
+        </div>
+        <div class="iq-menu-horizontal">
+          <nav class="iq-sidebar-menu">
+            <ul id="iq-sidebar-toggle" class="iq-menu d-flex"></ul>
           </nav>
         </div>
-      </div>
-      <!-- TOP Nav Bar END -->
-      <!-- Page Content  -->
-      <div id="content-page" class="content-page">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-lg-3">
-              <div
-                class="iq-card iq-card iq-card-block iq-card-stretch iq-card-height"
-              >
-                <div class="iq-card-body">
-                  <img
-                    src="images/page-img/41.png"
-                    class="img-fluid iq-image-full w-100"
-                    alt="page-img"
-                  />
-                </div>
-                <div class="iq-card-header d-flex justify-content-between">
-                  <div class="iq-header-title">
-                    <h4 class="card-title">Activity timeline</h4>
-                  </div>
-                  <div class="iq-card-header-toolbar d-flex align-items-center">
-                    <div class="dropdown">
-                      <span
-                        class="dropdown-toggle text-primary"
-                        id="dropdownMenuButton4"
-                        data-toggle="dropdown"
-                      >
-                        View All
-                      </span>
-                      <div
-                        class="dropdown-menu dropdown-menu-right"
-                        aria-labelledby="dropdownMenuButton4"
-                      >
-                        <a class="dropdown-item" href="#"
-                          ><i class="ri-eye-fill mr-2"></i>View</a
-                        >
-                        <a class="dropdown-item" href="#"
-                          ><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a
-                        >
-                        <a class="dropdown-item" href="#"
-                          ><i class="ri-pencil-fill mr-2"></i>Edit</a
-                        >
-                        <a class="dropdown-item" href="#"
-                          ><i class="ri-printer-fill mr-2"></i>Print</a
-                        >
-                        <a class="dropdown-item" href="#"
-                          ><i class="ri-file-download-fill mr-2"></i>Download</a
-                        >
-                      </div>
+        <nav class="navbar navbar-expand-lg navbar-light p-0">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="ri-menu-3-line"></i>
+          </button>
+          <div class="iq-menu-bt align-self-center">
+            <div class="wrapper-menu">
+              <div class="main-circle">
+                <i class="ri-arrow-left-s-line"></i>
+              </div>
+              <div class="hover-circle">
+                <i class="ri-arrow-right-s-line"></i>
+              </div>
+            </div>
+          </div>
 
+          <ul class="navbar-list">
+            <li>
+              <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center">
+                <img src="images/user/1.jpg" class="img-fluid rounded mr-3" alt="user" />
+              </a>
+              <div class="iq-sub-dropdown iq-user-dropdown">
+                <div class="iq-card shadow-none m-0">
+                  <div class="iq-card-body p-0">
+                    <div class="bg-primary p-3">
+                      <h5 id="hello-message" class="mb-0 text-white line-height">
+                        Hello Nik jone
+                      </h5>
+                      <span class="text-white font-size-12">email</span>
+                    </div>
+                    <a href="profile.html" class="iq-sub-card iq-bg-primary-hover">
+                      <div class="media align-items-center">
+                        <div class="rounded iq-card-icon iq-bg-primary">
+                          <i class="ri-file-user-line"></i>
+                        </div>
+                        <div class="media-body ml-3">
+                          <h6 class="mb-0">My Profile</h6>
+                          <p class="mb-0 font-size-12">
+                            View personal profile details.
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+
+                    <div class="d-inline-block w-100 text-center p-3">
+                      <a class="bg-primary iq-sign-btn" href="sign-in.html" role="button">Sign out<i
+                          class="ri-login-box-line ml-2"></i></a>
                     </div>
                   </div>
                 </div>
-                <div class="iq-card-body">
-                  <ul class="iq-timeline">
-                    <li>
-                      <div class="timeline-dots"></div>
-                      <h6 class="float-left mb-1">Client Login</h6>
-                      <small class="float-right mt-1">24 November 2019</small>
-                      <div class="d-inline-block w-100">
-                        <p>
-                          Bonbon macaroon jelly beans gummi bears jelly lollipop
-                          apple
-                        </p>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="timeline-dots border-success"></div>
-                      <h6 class="float-left mb-1">Scheduled Maintenance</h6>
-                      <small class="float-right mt-1">23 November 2019</small>
-                      <div class="d-inline-block w-100">
-                        <p>
-                          Bonbon macaroon jelly beans gummi bears jelly lollipop
-                          apple
-                        </p>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="timeline-dots border-primary"></div>
-                      <h6 class="float-left mb-1">Client Call</h6>
-                      <small class="float-right mt-1">19 November 2019</small>
-                      <div class="d-inline-block w-100">
-                        <p>
-                          Bonbon macaroon jelly beans gummi bears jelly lollipop
-                          apple
-                        </p>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="timeline-dots border-success"></div>
-                      <h6 class="float-left mb-1">Mega event</h6>
-                      <small class="float-right mt-1">15 November 2019</small>
-                      <div class="d-inline-block w-100">
-                        <p>
-                          Bonbon macaroon jelly beans gummi bears jelly lollipop
-                          apple
-                        </p>
-                      </div>
-                    </li>
-                  </ul>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <!-- TOP Nav Bar END -->
+    <!-- Page Content  -->
+    <div id="content-page" class="content-page">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="iq-card iq-card iq-card-block iq-card-stretch iq-card-height">
+              <div class="iq-card-body">
+                <img src="images/page-img/41.png" class="img-fluid iq-image-full w-100" alt="page-img" />
+              </div>
+              <div class="iq-card-header d-flex justify-content-between">
+                <div class="iq-header-title">
+                  <h4 class="card-title">Activity timeline</h4>
+                </div>
+                <div class="iq-card-header-toolbar d-flex align-items-center">
+                  <div class="dropdown">
+                    <span class="dropdown-toggle text-primary" id="dropdownMenuButton4" data-toggle="dropdown">
+                      View All
+                    </span>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton4">
+                      <a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>
+                      <a class="dropdown-item" href="#"><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a>
+                      <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
+                      <a class="dropdown-item" href="#"><i class="ri-printer-fill mr-2"></i>Print</a>
+                      <a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>
+                    </div>
+
+                  </div>
                 </div>
               </div>
+              <div class="iq-card-body">
+                <ul class="iq-timeline">
+                  
+                </ul>
+              </div>
             </div>
-            <div class="col-lg-9">
-              <div class="row">
-                <div class="col-xl-12">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <div
-                        class="iq-card iq-card-block iq-card-stretch iq-card-height"
-                      >
-                        <div class="iq-card-body">
-                          <div class="row">
-                            <div class="col-md-6 col-lg-3">
-                              <div
-                                class="d-flex align-items-center mb-3 mb-lg-0"
-                              >
-                                <div
-                                  class="rounded-circle iq-card-icon iq-bg-primary mr-3"
-                                >
-                                  <i class="ri-mail-open-line"></i>
-                                </div>
-                                <div class="text-left">
-                                  <h4>425</h4>
-                                  <p class="mb-0">Total Folder</p>
-                                </div>
+          </div>
+          <div class="col-lg-9">
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                      <div class="iq-card-body">
+                        <div class="row">
+                          <div class="col-md-6 col-lg-3">
+                            <div class="d-flex align-items-center mb-3 mb-lg-0">
+                              <div class="rounded-circle iq-card-icon iq-bg-primary mr-3">
+                                <i class="ri-mail-open-line"></i>
+                              </div>
+                              <div class="text-left">
+                                <h4 id="totalFolderCount">0</h4>
+                                <p class="mb-0">Total Folder</p>
                               </div>
                             </div>
-                            
-                            <div class="col-md-6 col-lg-3">
-                              <div
-                                class="d-flex align-items-center mb-3 mb-md-0"
-                              >
-                                <div
-                                  class="rounded-circle iq-card-icon iq-bg-warning mr-3"
-                                >
-                                  <i class="ri-task-line"></i>
-                                </div>
-                                <div class="text-left">
-                                  <h4>690</h4>
-                                  <p class="mb-0">Total File</p>
-                                </div>
+                          </div>
+                      
+                          <div class="col-md-6 col-lg-3">
+                            <div class="d-flex align-items-center mb-3 mb-md-0">
+                              <div class="rounded-circle iq-card-icon iq-bg-warning mr-3">
+                                <i class="ri-task-line"></i>
+                              </div>
+                              <div class="text-left">
+                                <h4 id="totalFileCount">0</h4>
+                                <p class="mb-0">Total File</p>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
+                      
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div class="col-lg-12 mail-box-detail">
-                  <div class="iq-card">
-                     <div class="iq-card-body p-0">
-                        <div class="">
-                           <div class="iq-email-to-list p-3">
-                              <div class="d-flex justify-content-between">
-                                 <ul>
-                                    <li>
-                                       
-                                      
-                                    </li>
-                                    <li data-toggle="tooltip" data-placement="top" title="Reload"><a href="#"><i class="ri-restart-line"></i></a></li>
-                                  
-                                 </ul>
-                                 
-                              </div>
-                           </div>
-                           <div class="iq-email-listbox">
-                              <div class="tab-content">
-                                 <div class="tab-pane fade show active" id="mail-inbox" role="tabpanel">
-                                    <ul class="iq-email-sender-list" id="directory-list">
+              <div class="col-lg-12 mail-box-detail">
+                <div class="iq-card">
+                  <div class="iq-card-body p-0">
+                    <div class="">
+                      <div class="iq-email-to-list p-3">
+                        <div class="d-flex justify-content-between">
+                          <ul>
+                            <li>
 
-                                     
-                                       <li>
-                                          <div class="d-flex align-self-center">
-                                             <div class="iq-email-sender-info">
-                                                <div class="iq-checkbox-mail">
-                                                   <i class="mdi mdi-folder"></i>
 
-                                                </div>
+                            </li>
+                            <li data-toggle="tooltip" data-placement="top" title="Reload"><a href="#"><i
+                                  class="ri-restart-line"></i></a></li>
 
-                                                <a href="javascript: void(0);"  class="iq-email-title">NN222L</a>
-                                             </div>
-                                             <div class="iq-email-content">
-                                                <a href="javascript: void(0);" class="iq-email-subject">
-                                                <span>Last Seen </span>
-                                                </a>
-                                                <div class="iq-email-date">11:49 am</div>
-                                             </div>
-                                             <ul class="iq-social-media">
-                                                <li><a href="#"><i class="ri-delete-bin-2-line"></i></a></li>
-                                                <li><a href="#"><i class="ri-mail-line"></i></a></li>
-                                                <li><a href="#"><i class="ri-file-list-2-line"></i></a></li>
-                                                <li><a href="#"><i class="ri-time-line"></i></a></li>
-                                             </ul>
-                                          </div>
-                                       </li>
-                                       <div class="email-app-details">
-                                          <div class="iq-card">
-                                             <div class="iq-card-body p-0">
-                                                <div class="">
-                                                   <div class="iq-email-to-list p-3">
-                                                      <div class="d-flex justify-content-between">
-                                                         <ul>
-                                                            <li class="mr-3">
-                                                               <a href="javascript: void(0);">
-                                                                  <h4 class="m-0"><i class="ri-arrow-left-line"></i></h4>
-                                                               </a>
-                                                            </li>
-                                                            
-                                                         </ul>
-                                                         <div class="iq-email-search d-flex">
-                                                            
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                   <hr class="mt-0">
-                                                   <div class="iq-inbox-subject p-3">
-                                                      <div class="iq-inbox-subject-info">
-                                                         <h3>Temukan File Anda</h3>
+                          </ul>
 
-                                                         <div class="file-list-container">
-                                                            <div class="file-entry">
-                                                               <i class="mdi mdi-file-document-outline"></i>
-                                                               <span class="file-name">File Untuk Jurnal</span>
-                                                               <div class="file-actions">
-                                                                   <i class="mdi mdi-download" onclick="downloadFile('File Untuk Jurnal');"></i> 
-                                                                   <i class="mdi mdi-delete" onclick="deleteFile('File Untuk Jurnal');"></i> 
-                                                               </div>
-                                                           </div>
-                                                           <div class="file-entry folder" onclick="toggleFolder('folder1Contents')">
-                                                            <i class="mdi mdi-folder"></i>
-                                                            <span class="file-name">Folder NN222L</span>
-                                                          </div>
-                                                          <div id="folder1Contents" class="folder-contents" style="display: none;">
-                                                            <div class="file-entry">
-                                                              <i class="mdi mdi-file-document-outline"></i>
-                                                              <span class="file-name">Subfile 1.docx</span>
-                                                            </div>
-                                                            <div class="file-entry folder" onclick="toggleFolder('subFolder1')">
-                                                              <i class="mdi mdi-folder"></i>
-                                                              <span class="file-name">Sub Folder 1</span>
-                                                            </div>
-                                                            <div id="subFolder1" class="folder-contents" style="display: none;">
-                                                              <div class="file-entry">
-                                                                <i class="mdi mdi-file-document-outline"></i>
-                                                                <span class="file-name">Sub Subfile 1.txt</span>
-                                                              </div>
-                                                            </div>
-                                                           
-                                                        </div>
-                                                         <div class="iq-inbox-body mt-5">
-                                                            
-                                                         </div>
-                                                         <hr>
-                                                         <div class="attegement">
-                                                            
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                </div>
-                                             </div>
-                                          </div>
-                                       </div>
-                                    </ul>
-                                 </div>
-                                
-                              </div>
-                           </div>
                         </div>
-                     </div>
+                      </div>
+                      <div class="iq-email-listbox">
+                        <div class="tab-content">
+                          <div class="tab-pane fade show active" id="mail-inbox" role="tabpanel">
+                            <ul class="iq-email-sender-list" id="directory-list">
+
+                              
+
+                              <li>
+                                <div class="d-flex align-self-center">
+                                  <div class="iq-email-sender-info">
+                                    <div class="iq-checkbox-mail">
+                                      <i class="mdi mdi-folder"></i>
+
+                                    </div>
+
+                                    <a href="javascript: void(0);" class="iq-email-title">NN222L</a>
+
+                                  </div>
+                                  <div class="iq-email-content">
+                                    <a href="javascript: void(0);" class="iq-email-subject">
+                                      <span>Last Seen </span>
+                                    </a>
+                                    <div class="iq-email-date">11:49 am</div>
+                                  </div>
+                                  <ul class="iq-social-media">
+                                    <li><a href="#"><i class="ri-delete-bin-2-line"></i></a></li>
+                                    <li><a href="#"><i class="ri-mail-line"></i></a></li>
+                                    <li><a href="#"><i class="ri-file-list-2-line"></i></a></li>
+                                    <li><a href="#"><i class="ri-time-line"></i></a></li>
+                                  </ul>
+                                </div>
+                              </li>
+                              <div class="email-app-details">
+                                <div class="iq-card">
+                                  <div class="iq-card-body p-0">
+                                    <div class="">
+                                      <div class="iq-email-to-list p-3">
+                                        <div class="d-flex justify-content-between">
+                                          <ul>
+                                            <li class="mr-3">
+                                              <a href="javascript: void(0);">
+                                                <h4 class="m-0"><i class="ri-arrow-left-line"></i></h4>
+                                              </a>
+                                            </li>
+
+                                          </ul>
+                                          <div class="iq-email-search d-flex">
+
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <hr class="mt-0">
+                                      <div class="iq-inbox-subject p-3">
+                                        <div class="iq-inbox-subject-info">
+                                          <h3>Temukan File Anda</h3>
+
+                                          <div class="file-list-container">
+                                            <div class="file-entry">
+                                              <i class="mdi mdi-file-document-outline"></i>
+                                              <span class="file-name">File Untuk Jurnal</span>
+                                              <div class="file-actions">
+                                                <i class="mdi mdi-download"
+                                                  onclick="downloadFile('File Untuk Jurnal');"></i>
+                                                <i class="mdi mdi-delete"
+                                                  onclick="deleteFile('File Untuk Jurnal');"></i>
+                                              </div>
+                                            </div>
+                                            <div class="file-entry folder" onclick="toggleFolder('folder1Contents')">
+                                              <i class="mdi mdi-folder"></i>
+                                              <span class="file-name">Folder NN222L</span>
+                                            </div>
+                                            <div id="folder1Contents" class="folder-contents" style="display: none;">
+                                              <div class="file-entry">
+                                                <i class="mdi mdi-file-document-outline"></i>
+                                                <span class="file-name">Subfile 1.docx</span>
+                                              </div>
+                                              <div class="file-entry folder" onclick="toggleFolder('subFolder1')">
+                                                <i class="mdi mdi-folder"></i>
+                                                <span class="file-name">Sub Folder 1</span>
+                                              </div>
+                                              <div id="subFolder1" class="folder-contents" style="display: none;">
+                                                <div class="file-entry">
+                                                  <i class="mdi mdi-file-document-outline"></i>
+                                                  <span class="file-name">Sub Subfile 1.txt</span>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="iq-inbox-body mt-5">
+
+                                            </div>
+                                            <hr>
+                                            <div class="attegement">
+
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </ul>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
                   </div>
-               </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -577,9 +523,10 @@
     </footer>
     <!-- Frontend  -->
     <script type="module" src="./js/navbar/navbar.js"></script>
-    <script type="module" src="./js/d4if/dashboard.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <script type="module" src="./js/s2mlog/dashboard.js"></script>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <!-- Footer END -->
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -624,16 +571,16 @@
     <!-- Custom JavaScript -->
     <script src="js/custom.js"></script>
     <script>function toggleFolder(elementId) {
-      var element = document.getElementById(elementId);
-      if (element.style.display === "none") {
+        var element = document.getElementById(elementId);
+        if (element.style.display === "none") {
           element.style.display = "block";  // Show the contents
-      } else {
+        } else {
           element.style.display = "none";  // Hide the contents
+        }
       }
-  }
 
-  
-  </script>
-  </body>
- 
+
+    </script>
+</body>
+
 </html>
