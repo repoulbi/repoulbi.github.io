@@ -338,7 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    const decodedUrl = btoa(download_url);
+    const decodedUrl = decodeURIComponent(download_url);
     const decodedFileName = decodeURIComponent(fileName);
 
     const link = document.createElement("a");
