@@ -444,7 +444,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const pdfUrl = encodeURIComponent(url);
-    window.open(`view.html?pdfUrl=${pdfUrl}`, "_blank");
+    // window.open(`view.html?pdfUrl=${pdfUrl}`, "_blank");
+    window.open("view/#" + { url }, "_blank");
   };
 
   window.fetchData(""); // Initial fetch
