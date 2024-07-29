@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
           item.type === "file"
             ? `<div class="file-actions">
               <button class="btn btn-primary download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
-              <button class="btn btn-success copy-url-link" onclick="viewFile('${item.download_url}')">View</button>
+              <button class="btn btn-success copy-url-link" onclick="viewFile('${item.endcoded_download_url}')">View</button>
               <button class="btn btn-danger delete-link" onclick="deleteFile('${item.path}')">Delete</button>
             </div>`
             : ""
