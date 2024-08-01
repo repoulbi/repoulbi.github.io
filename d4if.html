@@ -26,6 +26,14 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
 </head>
 <style>
+  .section-header {
+      font-size: 24px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin: 20px 0;
+      text-align: left;
+      padding-left: 15px;
+    }
   .folder-contents {
     padding-left: 20px;
     /* Indent contents to show nesting */
@@ -490,8 +498,174 @@
                           </div>
 
                         </div>
+                        
                       </div>
                     </div>
+                    
+                  </div>
+                </div>
+              </div>
+
+              
+              <div class="col-xl-12">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                      <div class="iq-card-body">
+                        <div class="row">
+                          <div class="col-md-6 col-lg-3">
+                            <div class="d-flex align-items-center mb-3 mb-lg-0">
+                              <div class="rounded-circle iq-card-icon iq-bg-primary mr-3">
+                                <i class="ri-mail-open-line"></i>
+                              </div>
+                              <div class="text-left">
+                                <h4 id="totalFolderCount-bap">0</h4>
+                                <p class="mb-0">Total Folder</p>
+                              </div>
+                            </div>
+                          </div>
+                      
+                          <div class="col-md-6 col-lg-3">
+                            <div class="d-flex align-items-center mb-3 mb-md-0">
+                              <div class="rounded-circle iq-card-icon iq-bg-warning mr-3">
+                                <i class="ri-task-line"></i>
+                              </div>
+                              <div class="text-left">
+                                <h4 id="totalFileCount-bap">0</h4>
+                                <p class="mb-0">Total File</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 mail-box-detail">
+                <div class="iq-card">
+                  <div class="iq-card-body p-0">
+                    <div class="">
+                      <div class="iq-email-to-list p-3">
+                        <div class="d-flex justify-content-between">
+                          <ul>
+                            <li>
+                            </li>
+                            <li data-toggle="tooltip" data-placement="top" title="Reload"><a href="#"><i
+                                  class="ri-restart-line"></i></a></li>
+
+                          </ul>
+                          <div class="section-header">Berita Acara Perkuliahan</div>
+
+                        </div>
+                      </div>
+                      <div class="iq-email-listbox">
+                        <div class="tab-content">
+                          <div class="tab-pane fade show active" id="mail-inbox" role="tabpanel">
+                            <ul class="iq-email-sender-list" id="directory-list2">
+
+                              <li>
+                                <div class="d-flex align-self-center">
+                                  <div class="iq-email-sender-info">
+                                    <div class="iq-checkbox-mail">
+                                      <i class="mdi mdi-folder"></i>
+
+                                    </div>
+
+                                    <a href="javascript: void(0);" class="iq-email-title">NN222L</a>
+
+                                  </div>
+                                  <div class="iq-email-content">
+                                    <a href="javascript: void(0);" class="iq-email-subject">
+                                      <span>Last Seen </span>
+                                    </a>
+                                    <div class="iq-email-date">11:49 am</div>
+                                  </div>
+                                  <ul class="iq-social-media">
+                                    <li><a href="#"><i class="ri-delete-bin-2-line"></i></a></li>
+                                    <li><a href="#"><i class="ri-mail-line"></i></a></li>
+                                    <li><a href="#"><i class="ri-file-list-2-line"></i></a></li>
+                                    <li><a href="#"><i class="ri-time-line"></i></a></li>
+                                  </ul>
+                                </div>
+                              </li>
+                              <div class="email-app-details">
+                                <div class="iq-card">
+                                  <div class="iq-card-body p-0">
+                                    <div class="">
+                                      <div class="iq-email-to-list p-3">
+                                        <div class="d-flex justify-content-between">
+                                          <ul>
+                                            <li class="mr-3">
+                                              <a href="javascript: void(0);">
+                                                <h4 class="m-0"><i class="ri-arrow-left-line"></i></h4>
+                                              </a>
+                                            </li>
+
+                                          </ul>
+                                          <div class="iq-email-search d-flex">
+
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <hr class="mt-0">
+                                      <div class="iq-inbox-subject p-3">
+                                        <div class="iq-inbox-subject-info">
+                                          <h3>Temukan File Anda</h3>
+
+                                          <div class="file-list-container">
+                                            <div class="file-entry">
+                                              <i class="mdi mdi-file-document-outline"></i>
+                                              <span class="file-name">File Untuk Jurnal</span>
+                                              <div class="file-actions">
+                                                <i class="mdi mdi-download"
+                                                  onclick="downloadFile('File Untuk Jurnal');"></i>
+                                                <i class="mdi mdi-delete"
+                                                  onclick="deleteFile('File Untuk Jurnal');"></i>
+                                              </div>
+                                            </div>
+                                            <div class="file-entry folder" onclick="toggleFolder('folder1Contents')">
+                                              <i class="mdi mdi-folder"></i>
+                                              <span class="file-name">Folder NN222L</span>
+                                            </div>
+                                            <div id="folder1Contents" class="folder-contents" style="display: none;">
+                                              <div class="file-entry">
+                                                <i class="mdi mdi-file-document-outline"></i>
+                                                <span class="file-name">Subfile 1.docx</span>
+                                              </div>
+                                              <div class="file-entry folder" onclick="toggleFolder('subFolder1')">
+                                                <i class="mdi mdi-folder"></i>
+                                                <span class="file-name">Sub Folder 1</span>
+                                              </div>
+                                              <div id="subFolder1" class="folder-contents" style="display: none;">
+                                                <div class="file-entry">
+                                                  <i class="mdi mdi-file-document-outline"></i>
+                                                  <span class="file-name">Sub Subfile 1.txt</span>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="iq-inbox-body mt-5">
+
+                                            </div>
+                                            <hr>
+                                            <div class="attegement">
+
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </ul>
+                          </div>
+
+                        </div>
+                        
+                      </div>
+                    </div>
+                    
                   </div>
                 </div>
               </div>
@@ -500,6 +674,7 @@
         </div>
       </div>
     </div>
+    
     <!-- Wrapper END -->
     <!-- Footer -->
     <footer class="bg-white iq-footer">
@@ -525,6 +700,8 @@
     <script type="module" src="./js/navbar/navbar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="./js/d4if/dashboard.js"></script>
+    <script type="module" src="./js/d4if/dashboard-bap.js"></script>
+
     <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <!-- Footer END -->
