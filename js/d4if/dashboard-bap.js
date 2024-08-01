@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const baseApiUrl = "https://repoulbi-be.ulbi.ac.id/repoulbi/contents";
-    const repository = "buktiajar";
+    const repository = "buktiajar-d4if";
     const foldersToHide = [
       ".vscode",
       "assets",
