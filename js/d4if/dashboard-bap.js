@@ -90,12 +90,12 @@ document.addEventListener("DOMContentLoaded", function () {
       const backButton = document.createElement("li");
       backButton.innerHTML = `
             <div class="d-flex align-self-center iq-email-sender-info">
-              <a href="javascript:void(0);" onclick="window.handleBackAction()" class="btn btn-primary back-button">
+              <a href="javascript:void(0);" onclick="window.handleBackActionbap()" class="btn btn-primary back-button">
                 <i class="ri-arrow-left-line"></i> Back
               </a>
               <div class="upload-container">
-                <input type="file" id="uploadFileInputbap" class="upload-input" />
-                <button class="btn btn-secondary create-folder-btn" onclick="window.handleCreateFolderClick()">Create Folder</button>
+                <input type="file" id="uploadFileInputbap" class="upload-input-bap" />
+                <button class="btn btn-secondary create-folder-btn" onclick="window.handleCreateFolderClickBap()">Create Folder</button>
     
                 <button class="btn btn-success upload-btn" onclick="document.getElementById('uploadFileInputbap').click();">Choose File</button>
                 <span id="fileNameBap" class="file-name">No file chosen</span>
@@ -121,23 +121,23 @@ document.addEventListener("DOMContentLoaded", function () {
         "d-flex justify-content-between align-items-center";
       itemElement.innerHTML = `
             <div class="iq-email-sender-info">
-              <div class="iq-checkbox-mail">
+              <div class="iq-checkbox-mail-bap">
                 <i class="mdi ${
                   item.type === "dir"
                     ? "mdi-folder"
                     : "mdi-file-document-outline"
                 }"></i>
               </div>
-              <a href="javascript:void(0);" class="iq-email-title" onclick="window.handleItemClick('${
+              <a href="javascript:void(0);" class="iq-email-title" onclick="window.handleItemClickbap('${
                 item.path
               }', '${item.type}')">${item.name}</a>
             </div>
             ${
               item.type === "file"
                 ? `<div class="file-actions">
-                  <button class="btn btn-primary download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
-                  <button class="btn btn-success copy-url-link" onclick="viewFile('${item.download_url}')">View</button>
-                  <button class="btn btn-danger delete-link" onclick="deleteFile('${item.path}')">Delete</button>
+                  <button class="btn btn-primary download-link" onclick="downloadFilebap('${item.download_url}', '${item.filename}')">Download</button>
+                  <button class="btn btn-success copy-url-link" onclick="viewFilebap('${item.download_url}')">View</button>
+                  <button class="btn btn-danger delete-link" onclick="deleteFilebap('${item.path}')">Delete</button>
                 </div>`
                 : ""
             }`;
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
     displayStoredActivities();
   }
 
-  window.handleBackAction = function () {
+  window.handleBackActionbap = function () {
     if (window.directoryStack.length > 1) {
       window.directoryStack.pop(); // Remove current directory
       const previousPath =
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  window.handleItemClick = function (path, type) {
+  window.handleItemClickbap = function (path, type) {
     if (type === "dir") {
       window.fetchData(path); // Fetch the directory contents
     }
@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  window.handleCreateFolderClick = function () {
+  window.handleCreateFolderClickBap = function () {
     Swal.fire({
       title: "Create New Folder",
       input: "text",
@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   };
 
-  window.downloadFile = function (download_url, fileName) {
+  window.downloadFilebap = function (download_url, fileName) {
     if (!download_url) {
       console.error("No download URL provided.");
       alert("Download URL not available for this item.");
@@ -384,7 +384,7 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   };
 
-  window.deleteFile = function (path) {
+  window.deleteFilebap = function (path) {
     const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/deletefile?repository=${repository}&path=${encodeURIComponent(
       path
     )}`;
@@ -439,7 +439,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   };
 
-  window.viewFile = function (url) {
+  window.viewFilebap = function (url) {
     if (!url) {
       console.error("No URL provided.");
       alert("View URL not available for this item.");
