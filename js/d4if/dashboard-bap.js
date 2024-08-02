@@ -149,10 +149,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   window.handleBackActionbap = function () {
-    if (window.directoryStack.length > 1) {
-      window.directoryStack.pop(); // Remove current directory
+    if (window.directoryStackbap.length > 1) {
+      window.directoryStackbap.pop(); // Remove current directory
       const previousPath =
-        window.directoryStack[window.directoryStack.length - 1];
+        window.directoryStackbap[window.directoryStackbap.length - 1];
       window.fetchData(previousPath); // Fetch previous directory
     }
   };
@@ -219,8 +219,8 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
         }
 
-        const currentPath = window.directoryStack[
-          window.directoryStack.length - 1
+        const currentPath = window.directoryStackbap[
+          window.directoryStackbap.length - 1
         ]
           .replace(baseApiUrl, "")
           .split("?")[0];
