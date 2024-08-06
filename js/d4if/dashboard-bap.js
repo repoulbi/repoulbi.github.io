@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return token ? decodeURIComponent(token) : null;
   }
   // Pengaturan untuk repository buktiajar-d4if
+  clearDailyActivities();
   const baseApiUrlBap = "https://repoulbi-be.ulbi.ac.id/repoulbi/contents";
   const repositoryBap = "buktiajar-d4if";
   const foldersToHideBap = [
@@ -413,6 +414,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 icon: "success",
               }).then(() => {
                 window.fetchDataD4if(currentPath); // Refresh the current directory
+                updateTimeline("createFolder", folderName, currentPath);
               });
             } else {
               Swal.fire({
@@ -490,6 +492,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 icon: "success",
               }).then(() => {
                 window.fetchDataBap(currentPath); // Refresh the current directory
+                updateTimeline("createFolder", folderName, currentPath);
               });
             } else {
               Swal.fire({
@@ -542,6 +545,7 @@ document.addEventListener("DOMContentLoaded", function () {
             icon: "success",
           }).then(() => {
             window.fetchDataD4if(currentPath); // Refresh the current directory
+            updateTimeline("upload", file.name, currentPath);
           });
         } else {
           Swal.fire({
@@ -592,6 +596,7 @@ document.addEventListener("DOMContentLoaded", function () {
             icon: "success",
           }).then(() => {
             window.fetchDataBap(currentPath); // Refresh the current directory
+            updateTimeline("upload", file.name, currentPath);
           });
         } else {
           Swal.fire({
@@ -704,6 +709,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     window.directoryStackD4if.length - 1
                   ];
                 window.fetchDataD4if(currentPath); // Refresh the current directory
+                updateTimeline("delete", path.split("/").pop(), currentPath);
               });
             } else {
               Swal.fire({
@@ -724,6 +730,74 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   };
+
+  function updateTimeline(action, itemName, path) {
+    const timelineContainer = document.querySelector(".iq-timeline");
+    const currentDateTime = new Date().toLocaleString();
+
+    let actionText = "";
+    let borderColorClass = "";
+    if (action === "upload") {
+      actionText = `Uploaded file "${itemName}"`;
+      borderColorClass = "border-success";
+    } else if (action === "createFolder") {
+      actionText = `Created folder "${itemName}"`;
+      borderColorClass = "border-primary";
+    } else if (action === "delete") {
+      actionText = `Deleted file "${itemName}"`;
+      borderColorClass = "border-danger";
+    }
+
+    const activity = {
+      path,
+      currentDateTime,
+      actionText,
+      borderColorClass,
+    };
+
+    saveActivityToLocalStorage(activity);
+
+    displayStoredActivities();
+  }
+
+  function saveActivityToLocalStorage(activity) {
+    const activities = JSON.parse(localStorage.getItem("activities")) || [];
+    activities.push(activity);
+    if (activities.length > 5) {
+      activities.shift();
+    }
+    localStorage.setItem("activities", JSON.stringify(activities));
+  }
+
+  function displayStoredActivities() {
+    const activities = JSON.parse(localStorage.getItem("activities")) || [];
+    const timelineContainer = document.querySelector(".iq-timeline");
+    timelineContainer.innerHTML = "";
+
+    activities.reverse().forEach((activity) => {
+      const newTimelineItem = `
+        <li>
+          <div class="timeline-dots ${activity.borderColorClass}"></div>
+          <h6 class="float-left mb-1">${activity.path}</h6>
+          <small class="float-right mt-1">${activity.currentDateTime}</small>
+          <div class="d-inline-block w-100">
+            <p>${activity.actionText}</p>
+          </div>
+        </li>
+      `;
+      timelineContainer.innerHTML += newTimelineItem;
+    });
+  }
+
+  function clearDailyActivities() {
+    const lastClearDate = localStorage.getItem("lastClearDate");
+    const today = new Date().toLocaleDateString();
+
+    if (lastClearDate !== today) {
+      localStorage.removeItem("activities");
+      localStorage.setItem("lastClearDate", today);
+    }
+  }
 
   window.deleteFileBap = function (path) {
     const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/deletefile?repository=${repositoryBap}&path=${encodeURIComponent(
@@ -758,6 +832,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const currentPath =
                   window.directoryStackBap[window.directoryStackBap.length - 1];
                 window.fetchDataBap(currentPath); // Refresh the current directory
+                updateTimeline("delete", path.split("/").pop(), currentPath);
               });
             } else {
               Swal.fire({
