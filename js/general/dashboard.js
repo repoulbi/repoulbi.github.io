@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   // Pengaturan untuk repository d4if
   const baseApiUrlD4if = "https://repoulbi-be.ulbi.ac.id/repoulbi/contents";
-  const repositoryD4if = "d4if";
+  const repositoryD4if = "general";
   const foldersToHideD4if = [
     ".vscode",
     "assets",
