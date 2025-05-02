@@ -290,7 +290,7 @@ document.addEventListener("DOMContentLoaded", function () {
       html: `
         <div style="text-align: left; width: 100%; padding: 0 10px;">
           <div style="margin-bottom: 15px;">
-            <label for="tanggal" style="display: block; font-weight: bold; margin-bottom: 5px;">Tanggal Ditentukan</label>
+            <label for="tanggal" style="display: block; font-weight: bold; margin-bottom: 5px;">Tanggal Penetapan SK</label>
             <input type="date" id="tanggal" class="swal2-input" style="width: 100%; margin: 0;">
           </div>
           <div>
