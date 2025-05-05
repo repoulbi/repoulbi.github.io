@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <input type="file" id="uploadFileInput" class="upload-input" />
             <button class="btn btn-secondary create-folder-btn" onclick="window.handleCreateFolderClick()">Create Folder</button>
 
-            <button class="btn btn-success upload-btn" onclick="window.uploadFile();">Choose File</button>
+            <button class="btn btn-success upload-btn" onclick="window.uploadFile();">Upload File</button>
           </div>
         </div>`;
       listContainer.appendChild(backButton);
