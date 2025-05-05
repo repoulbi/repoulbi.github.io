@@ -95,10 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="upload-container">
             <input type="file" id="uploadFileInput" class="upload-input" />
             <button class="btn btn-secondary create-folder-btn" onclick="window.handleCreateFolderClick()">Create Folder</button>
-
-            <button class="btn btn-success upload-btn" onclick="document.getElementById('uploadFileInput').click();">Choose File</button>
-            <span id="fileName" class="file-name">No file chosen</span>
-            <button class="btn btn-info upload-file-btn" onclick="window.handleUploadClick()">Upload File</button>
+            <button class="btn btn-success upload-btn" onclick="window.uploadFileModal();">Upload File</button>
           </div>
         </div>`;
       listContainer.appendChild(backButton);
@@ -272,6 +269,97 @@ document.addEventListener("DOMContentLoaded", function () {
             Swal.fire({
               title: "Error!",
               text: "Failed to create folder. Please try again.",
+              icon: "error",
+            });
+          });
+      }
+    });
+  };
+
+  window.uploadFileModal = function () {
+    const currentPath = window.directoryStack[window.directoryStack.length - 1]
+      .replace(baseApiUrl, "")
+      .split("?")[0];
+    const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/uploadfile/${encodeURIComponent(currentPath)}`;
+    const token = getAuthToken();
+  
+    Swal.fire({
+      title: 'Upload PDF File',
+      html: `
+        <div style="text-align: left; width: 100%; padding: 0 10px;">
+          <div style="margin-bottom: 15px;">
+            <label for="tanggal" style="display: block; font-weight: bold; margin-bottom: 5px;">Tanggal Penetapan Dokumen</label>
+            <input type="date" id="tanggal" class="swal2-input" style="width: 100%; margin: 0;">
+          </div>
+          <div>
+            <label for="pdfFile" style="display: block; font-weight: bold; margin-bottom: 5px;">Pilih File PDF</label>
+            <input type="file" id="pdfFile" accept="application/pdf" class="swal2-file" style="width: 100%;">
+          </div>
+        </div>
+      `,
+      customClass: {
+        popup: 'swal2-no-center' // optional, in case you want to define custom class
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Submit',
+      cancelButtonText: 'Cancel',
+      focusConfirm: false,
+      preConfirm: () => {
+        const tanggal = document.getElementById('tanggal').value;
+        const file = document.getElementById('pdfFile').files[0];
+  
+        if (!tanggal) {
+          Swal.showValidationMessage('Tanggal tidak boleh kosong');
+          return false;
+        }
+  
+        if (!file || file.type !== 'application/pdf') {
+          Swal.showValidationMessage('Harap unggah file PDF yang valid');
+          return false;
+        }
+  
+        return { tanggal, file };
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const { tanggal, file } = result.value;
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("tanggal", tanggal); // contoh field
+        formData.append("repository", repository);
+  
+        fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            accept: "application/json",
+            LOGIN: token,
+          },
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.message === "File uploaded successfully" && data.status_code === 200) {
+              Swal.fire({
+                title: "Success!",
+                text: "File uploaded successfully",
+                icon: "success",
+              }).then(() => {
+                window.fetchData(currentPath); // Refresh
+                updateTimeline("upload", file.name, currentPath);
+              });
+            } else {
+              Swal.fire({
+                title: "Error!",
+                text: "File upload failed: " + data.status,
+                icon: "error",
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error uploading file:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "File upload failed. Please try again.",
               icon: "error",
             });
           });
