@@ -209,6 +209,42 @@
     font-style: italic;
     color: #555;
   }
+
+  @media (max-width: 768px) {
+  .iq-email-sender-list > li {
+    flex-direction: column !important;
+    align-items: flex-start !important; /* nama file tetap rata kiri */
+  }
+
+  .iq-email-sender-info {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    word-break: break-word;
+  }
+
+  .iq-email-title {
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+  }
+  .file-actions {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* tombol rata tengah */
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .file-actions button {
+    margin-bottom: 6px;
+  }
+}
 </style>
 
 <body class="iq-page-menu-horizontal">
