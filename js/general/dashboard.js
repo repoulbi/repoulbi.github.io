@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "src",
   ];
   let permissions = false;
-  const maxFileSizeMB = 5; // Maximum file size in MB
+  const maxFileSizeMB = 12; // Maximum file size in MB
   window.directoryStack = [""]; // Starting with the base directory
 
   // Check and clear activities daily
@@ -113,10 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
             <i class="ri-arrow-left-line"></i> Back
           </a>
           <div class="upload-container">
-            <input type="file" id="uploadFileInput" class="upload-input" />
-            <button class="btn btn-secondary create-folder-btn" onclick="window.handleCreateFolderClick()"${permissions === true ? "" : "hidden"}>Create Folder</button>
-
-            <button class="btn btn-success upload-btn" onclick="window.uploadFile();"${permissions === true ? "" : "hidden"}>Upload File</button>
+            <input type="file" id="uploadFileInput" class="upload-input" ${permissions ? '' : 'style="display:none"'} multiple />
+            <button class="btn btn-secondary create-folder-btn" onclick="window.handleCreateFolderClick()">Create Folder</button>
+            ${permissions ? `<button class="btn btn-success upload-btn" onclick="window.uploadFile();">Upload File</button>` : ''}
           </div>
         </div>`;
       listContainer.appendChild(backButton);
@@ -124,10 +123,12 @@ document.addEventListener("DOMContentLoaded", function () {
       // Add event listener for file input
       const uploadFileInput = document.getElementById("uploadFileInput");
       uploadFileInput.addEventListener("change", function (event) {
-        const file = event.target.files[0];
-        document.getElementById("fileName").textContent = file
-            ? file.name
-            : "No file chosen";
+        if (this.files.length > 1) {
+          window.handleBulkUpload(Array.from(this.files));
+        } else if (this.files.length === 1) {
+          window.uploadFile(this.files[0]);
+        }
+        this.value = ''; // Reset input
       });
     }
     
@@ -147,17 +148,12 @@ document.addEventListener("DOMContentLoaded", function () {
       }', '${item.type}')">${item.name}</a>
         </div>
         ${
-          item.type === "file" && permissions === true
+          item.type === "file"
 
               ? `<div class="file-actions">
               <button class="btn btn-primary download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
               <button class="btn btn-success copy-url-link" onclick="viewFile('${item.download_url}')">View</button>
-              <button class="btn btn-danger delete-link" onclick="deleteFile('${item.path}')">Delete</button>
-            </div>`
-              : item.type === "file" && permissions === false
-              ? `<div class="file-actions">
-              <button class="btn btn-primary download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
-              <button class="btn btn-success copy-url-link" onclick="viewFile('${item.download_url}')">View</button>
+              <button class="btn btn-danger delete-link" onclick="deleteFile('${item.path}')"${permissions === true ? "" : "hidden"}>Delete</button>
             </div>`
               : ""
       }`;
@@ -303,7 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
 
-  window.uploadFile = function () {
+  window.uploadFile = function (file) {
     const currentPath = window.directoryStack[window.directoryStack.length - 1]
       .replace(baseApiUrl, "")
       .split("?")[0];
@@ -393,59 +389,52 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   };
-  
 
-  // window.uploadFile = function (file) {
-  //   const currentPath = window.directoryStack[window.directoryStack.length - 1]
-  //       .replace(baseApiUrl, "")
-  //       .split("?")[0];
-  //   const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/uploadfile/${encodeURIComponent(
-  //       currentPath
-  //   )}`;
-  //   const token = getAuthToken();
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-  //   formData.append("repository", repository);
-
-  //   fetch(apiUrl, {
-  //     method: "POST",
-  //     headers: {
-  //       accept: "application/json",
-  //       LOGIN: token,
-  //     },
-  //     body: formData,
-  //   })
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         if (
-  //             data.message === "File uploaded successfully" &&
-  //             data.status_code === 200
-  //         ) {
-  //           Swal.fire({
-  //             title: "Success!",
-  //             text: "File uploaded successfully",
-  //             icon: "success",
-  //           }).then(() => {
-  //             window.fetchData(currentPath); // Refresh the current directory
-  //             updateTimeline("upload", file.name, currentPath);
-  //           });
-  //         } else {
-  //           Swal.fire({
-  //             title: "Error!",
-  //             text: "File upload failed: " + data.message,
-  //             icon: "error",
-  //           });
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error uploading file:", error);
-  //         Swal.fire({
-  //           title: "Error!",
-  //           text: "File upload failed. Please try again.",
-  //           icon: "error",
-  //         });
-  //       });
-  // };
+  window.handleBulkUpload = async function(files) {
+    const currentPath = window.directoryStack[window.directoryStack.length - 1];
+    const token = getAuthToken();
+    
+    try {
+      // Show loading state
+      const bulkUploadBtn = document.querySelector('.bulk-upload-btn');
+      bulkUploadBtn.disabled = true;
+      bulkUploadBtn.innerHTML = '<i class="ri-loader-4-line"></i> Uploading...';
+      
+      // Process each file sequentially
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        const response = await fetch(`${baseApiUrl}/upload?path=${currentPath}`, {
+          method: 'POST',
+          headers: { 'LOGIN': token },
+          body: formData
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Failed to upload ${file.name}`);
+        }
+        
+        // Update UI for each successful upload
+        updateTimeline('upload', file.name, currentPath);
+      }
+      
+      // Refresh directory after all uploads complete
+      window.fetchData(currentPath);
+      alert(`${files.length} files uploaded successfully!`);
+      
+    } catch (error) {
+      console.error('Bulk upload error:', error);
+      alert(`Upload failed: ${error.message}`);
+    } finally {
+      // Reset button state
+      const bulkUploadBtn = document.querySelector('.bulk-upload-btn');
+      if (bulkUploadBtn) {
+        bulkUploadBtn.disabled = false;
+        bulkUploadBtn.innerHTML = 'Bulk Upload';
+      }
+    }
+  };
 
   window.downloadFile = function (download_url, fileName) {
     if (!download_url) {
