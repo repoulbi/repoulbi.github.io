@@ -10,11 +10,27 @@ document.addEventListener("DOMContentLoaded", function () {
     "metis-assets",
     "src",
   ];
+  let permissions = false;
   const maxFileSizeMB = 5; // Maximum file size in MB
   window.directoryStack = [""]; // Starting with the base directory
 
   // Check and clear activities daily
   clearDailyActivities();
+
+  window.fetchPermissionData = function () {
+    const url = "https://repoulbi-be.ulbi.ac.id/repoulbi/permissions";
+    const token = getAuthToken();
+    fetch(url, {
+      headers: { LOGIN: token, "Content-Type": "application/json" },
+    })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.status_code !== 200) {
+            throw new Error("Failed to fetch data: " + response.message);
+          }
+          permissions = response.data.decisions;
+        })
+  };
 
   window.fetchData = function (path = "") {
     const url = buildApiUrl(path);
@@ -27,6 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
           if (response.status_code !== 200) {
             throw new Error("Failed to fetch data: " + response.message);
           }
+
+          window.fetchPermissionData();
           const data = response.data;
           const isBaseFetch = path === "";
           const itemsToShow = isBaseFetch
@@ -84,6 +102,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     listContainer.innerHTML = ""; // Clear previous entries
 
+    window.fetchPermissionData();
+
     // Optionally add a back button and upload button
     if (showBackButton) {
       const backButton = document.createElement("li");
@@ -94,9 +114,9 @@ document.addEventListener("DOMContentLoaded", function () {
           </a>
           <div class="upload-container">
             <input type="file" id="uploadFileInput" class="upload-input" />
-            <button class="btn btn-secondary create-folder-btn" onclick="window.handleCreateFolderClick()">Create Folder</button>
+            <button class="btn btn-secondary create-folder-btn" onclick="window.handleCreateFolderClick()"${permissions === true ? "" : "hidden"}>Create Folder</button>
 
-            <button class="btn btn-success upload-btn" onclick="window.uploadFile();">Upload File</button>
+            <button class="btn btn-success upload-btn" onclick="window.uploadFile();"${permissions === true ? "" : "hidden"}>Upload File</button>
           </div>
         </div>`;
       listContainer.appendChild(backButton);
@@ -110,8 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
             : "No file chosen";
       });
     }
-
-    // Append each directory or file to the list
+    
     data.forEach((item) => {
       const itemElement = document.createElement("li");
       itemElement.className =
@@ -128,11 +147,17 @@ document.addEventListener("DOMContentLoaded", function () {
       }', '${item.type}')">${item.name}</a>
         </div>
         ${
-          item.type === "file"
+          item.type === "file" && permissions === true
+
               ? `<div class="file-actions">
               <button class="btn btn-primary download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
               <button class="btn btn-success copy-url-link" onclick="viewFile('${item.download_url}')">View</button>
               <button class="btn btn-danger delete-link" onclick="deleteFile('${item.path}')">Delete</button>
+            </div>`
+              : item.type === "file" && permissions === false
+              ? `<div class="file-actions">
+              <button class="btn btn-primary download-link" onclick="downloadFile('${item.download_url}', '${item.filename}')">Download</button>
+              <button class="btn btn-success copy-url-link" onclick="viewFile('${item.download_url}')">View</button>
             </div>`
               : ""
       }`;
