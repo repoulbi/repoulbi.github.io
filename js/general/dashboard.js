@@ -116,6 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <input type="file" id="uploadFileInput" class="upload-input" ${permissions ? '' : 'style="display:none"'} multiple />
             <button class="btn btn-secondary create-folder-btn" onclick="window.handleCreateFolderClick()">Create Folder</button>
             ${permissions ? `<button class="btn btn-success upload-btn" onclick="window.uploadFile();">Upload File</button>` : ''}
+            ${permissions ? `<button class="btn btn-primary upload-btn" onclick="window.uploadFileBulk();">Bulk Upload</button>` : ''}
           </div>
         </div>`;
       listContainer.appendChild(backButton);
@@ -124,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const uploadFileInput = document.getElementById("uploadFileInput");
       uploadFileInput.addEventListener("change", function (event) {
         if (this.files.length > 1) {
-          window.handleBulkUpload(Array.from(this.files));
+          window.uploadFileBulk(Array.from(this.files));
         } else if (this.files.length === 1) {
           window.uploadFile(this.files[0]);
         }
@@ -348,7 +349,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const { tanggal, file } = result.value;
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("tanggal", tanggal); // contoh field
+        formData.append("tanggal", tanggal);
         formData.append("repository", repository);
   
         fetch(apiUrl, {
@@ -390,51 +391,110 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   };
 
-  window.handleBulkUpload = async function(files) {
-    const currentPath = window.directoryStack[window.directoryStack.length - 1];
-    const token = getAuthToken();
-    
-    try {
-      // Show loading state
-      const bulkUploadBtn = document.querySelector('.bulk-upload-btn');
-      bulkUploadBtn.disabled = true;
-      bulkUploadBtn.innerHTML = '<i class="ri-loader-4-line"></i> Uploading...';
-      
-      // Process each file sequentially
-      for (const file of files) {
-        const formData = new FormData();
-        formData.append('file', file);
-        
-        const response = await fetch(`${baseApiUrl}/upload?path=${currentPath}`, {
-          method: 'POST',
-          headers: { 'LOGIN': token },
-          body: formData
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Failed to upload ${file.name}`);
+  window.uploadFileBulk = function (file) {
+  const currentPath = window.directoryStack[window.directoryStack.length - 1]
+    .replace(baseApiUrl, "")
+    .split("?")[0];
+  const apiUrl = `https://repoulbi-be.ulbi.ac.id/repoulbi/bulkupload/${encodeURIComponent(currentPath)}`;
+  const token = getAuthToken();
+
+  Swal.fire({
+    title: 'Upload PDF Files',
+    html: `
+      <div style="text-align: left; width: 100%; padding: 0 10px;">
+        <div style="margin-bottom: 15px;">
+          <label for="tanggal" style="display: block; font-weight: bold; margin-bottom: 5px;">Tanggal Penetapan SK</label>
+          <input type="date" id="tanggal" class="swal2-input" style="width: 100%; margin: 0;">
+        </div>
+        <div>
+          <label for="pdfFile" style="display: block; font-weight: bold; margin-bottom: 5px;">Pilih File PDF (Bisa Lebih dari 1)</label>
+          <input type="file" id="pdfFile" accept="application/pdf" class="swal2-file" style="width: 100%;" multiple>
+        </div>
+      </div>
+    `,
+    customClass: {
+      popup: 'swal2-no-center'
+    },
+    showCancelButton: true,
+    confirmButtonText: 'Submit',
+    cancelButtonText: 'Cancel',
+    focusConfirm: false,
+    preConfirm: () => {
+      const tanggal = document.getElementById('tanggal').value;
+      const files = document.getElementById('pdfFile').files;
+
+      if (!tanggal) {
+        Swal.showValidationMessage('Tanggal tidak boleh kosong');
+        return false;
+      }
+
+      if (!files.length) {
+        Swal.showValidationMessage('Harap unggah minimal satu file PDF');
+        return false;
+      }
+
+      for (let file of files) {
+        if (file.type !== 'application/pdf') {
+          Swal.showValidationMessage('Semua file harus berformat PDF');
+          return false;
         }
-        
-        // Update UI for each successful upload
-        updateTimeline('upload', file.name, currentPath);
       }
-      
-      // Refresh directory after all uploads complete
-      window.fetchData(currentPath);
-      alert(`${files.length} files uploaded successfully!`);
-      
-    } catch (error) {
-      console.error('Bulk upload error:', error);
-      alert(`Upload failed: ${error.message}`);
-    } finally {
-      // Reset button state
-      const bulkUploadBtn = document.querySelector('.bulk-upload-btn');
-      if (bulkUploadBtn) {
-        bulkUploadBtn.disabled = false;
-        bulkUploadBtn.innerHTML = 'Bulk Upload';
-      }
+
+      return { tanggal, files };
     }
-  };
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const { tanggal, files } = result.value;
+      const formData = new FormData();
+
+      for (let i = 0; i < files.length; i++) {
+        formData.append("file", files[i]);
+      }
+
+      formData.append("tanggal", tanggal);
+      formData.append("repository", repository);
+
+      fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          LOGIN: token,
+        },
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.message === "File uploaded successfully" && data.status_code === 200) {
+            Swal.fire({
+              title: "Success!",
+              text: "File uploaded successfully",
+              icon: "success",
+            }).then(() => {
+              window.fetchData(currentPath);
+              for (let file of files) {
+                updateTimeline("upload", file.name, currentPath);
+              }
+            });
+          } else {
+            Swal.fire({
+              title: "Error!",
+              text: "File upload failed: " + data.status,
+              icon: "error",
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error uploading file:", error);
+          Swal.fire({
+            title: "Error!",
+            text: "File upload failed. Please try again.",
+            icon: "error",
+          });
+        });
+    }
+  });
+};
+
 
   window.downloadFile = function (download_url, fileName) {
     if (!download_url) {
